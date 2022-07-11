@@ -23,10 +23,11 @@ model User {
   tokens Token[]
   products Product[]
   reviews Review[]
-  records Record[]
+  favs Fav[]
   posts Post[]
   comments Comment[]
-  likeComments LikeCommnet[]
+  likeComments LikeComment[]
+  records Record[]
 }
 
 model Token {
@@ -51,6 +52,7 @@ model Product {
   sales Product[] @relation("ProductRelation")
   photos Photo[]
   reviews Review[]
+  favs Fav[]
   records Record[]
 }
 
@@ -75,7 +77,7 @@ model Review {
   score Int @default(1)
 }
 
-model Record { 
+model Fav { 
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -83,12 +85,27 @@ model Record {
   productId Int
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
+  
+}
+
+
+model Record { 
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  
+  kind Kind
 }
 
 enum Kind { 
-  Fav
+  Purchase
+  Sale
   FavList
 }
+
 
 model Post {
   id Int @id @default(autoincrement())
@@ -98,8 +115,8 @@ model Post {
   userId Int
   question String @db.MediumText 
   comments Comment[]
-  likeComments LikeCommnet[]
-  image String
+  likeComments LikeComment[]
+  image String?
 }
 
 model Comment {
@@ -113,7 +130,7 @@ model Comment {
   answer String @db.MediumText
 }
 
-model LikeCommnet { 
+model LikeComment { 
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
