@@ -111,7 +111,12 @@ const Enter: NextPage = () => {
     <section className="min-h-screen flex text-gray-700">
       {windowSize > 965 ? (
         <div className="relative w-[50%] h-screen">
-          <Image src={enterImage} layout="fill" objectFit="cover" alt="enter" />
+          <Image
+            src={enterImage}
+            layout="fill"
+            objectFit="contain"
+            alt="enter"
+          />
         </div>
       ) : null}
       <main

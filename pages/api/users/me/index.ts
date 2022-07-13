@@ -29,7 +29,7 @@ const handler = async (
           .status(404)
           .json({ ok: false, error: "Could not found user." });
       }
-      return res.status(200).json({ ok: true, existUser });
+      return res.status(200).json({ ok: true, user: existUser });
     }
 
     if (req.method === "POSt") {
