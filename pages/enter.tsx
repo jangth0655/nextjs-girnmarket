@@ -224,7 +224,7 @@ const Enter: NextPage = () => {
                 </form>
               </div>
               <EnterLinkMessage
-                link={"/enter"}
+                link={"/login"}
                 text="Already a member?"
                 enterMessage="Log in now"
               />
