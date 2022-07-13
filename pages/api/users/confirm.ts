@@ -8,6 +8,7 @@ const handler = async (
 ) => {
   try {
     const { token } = req.body;
+
     const foundToken = await client.token.findUnique({
       where: {
         payload: token,

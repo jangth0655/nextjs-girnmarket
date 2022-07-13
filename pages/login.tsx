@@ -9,21 +9,36 @@ import { useForm } from "react-hook-form";
 import logo from "../public/image/logo.png";
 import loginImage from "../public/image/login.jpg";
 import EnterLinkMessage from "@components/enter/EnterLinkMessage";
+import useMutation from "@libs/client/mutation";
+import { useRouter } from "next/router";
 
 interface LoginForm {
   email: string;
   username: string;
+  error?: string;
+}
+
+interface LoginMutation {
+  ok: boolean;
+  token: number;
 }
 
 const Login: NextPage = () => {
+  const router = useRouter();
   const [windowSize, setWindowSize] = useState(0);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<LoginForm>({
     mode: "onChange",
   });
+
+  const [login, { loading, data, error }] =
+    useMutation<LoginMutation>("/api/users/login");
+
+  console.log(data);
 
   const handleSize = useCallback(() => {
     setWindowSize(window.innerWidth);
@@ -40,9 +55,21 @@ const Login: NextPage = () => {
     setWindowSize(window.innerWidth);
   }, []);
 
-  const onValid = () => {};
+  const onValid = (data: LoginForm) => {
+    if (loading) return;
+    if (error) {
+      setError("error", { message: error });
+    }
+    login(data);
+  };
 
-  const ErrorState = errors.email || errors.username;
+  useEffect(() => {
+    if (data && data.ok) {
+      router.replace("/");
+    }
+  }, [data, router]);
+
+  const ErrorState = errors.email || errors.username || errors.error;
 
   return (
     <section className="min-h-screen flex text-gray-700">
@@ -54,7 +81,7 @@ const Login: NextPage = () => {
       <main
         className={cls(
           "py-24 px-4  m-auto",
-          windowSize < 980 ? "w-full" : "w-[40%]"
+          windowSize < 965 ? "w-full" : "w-[40%]"
         )}
       >
         <div className="max-w-sm m-auto space-y-12">
@@ -70,7 +97,11 @@ const Login: NextPage = () => {
           <div>
             {ErrorState && (
               <ErrorMessage
-                errorText={errors.email?.message || errors.username?.message}
+                errorText={
+                  errors.email?.message ||
+                  errors.username?.message ||
+                  errors.error?.message
+                }
               />
             )}
             <form
@@ -107,6 +138,7 @@ const Login: NextPage = () => {
               <EnterButton
                 text="Create Account"
                 errorState={Boolean(ErrorState)}
+                loading={loading}
               />
             </form>
           </div>

@@ -10,6 +10,7 @@ const handler = async (
 ) => {
   try {
     const { email } = req.body;
+
     const user = await client.user.findUnique({
       where: {
         email,
