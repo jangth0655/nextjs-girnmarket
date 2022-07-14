@@ -15,7 +15,10 @@ interface LayoutProps {
   title?: string;
 }
 
-const navItem = ["product", "community"];
+const navItem = [
+  { name: "product", path: "/" },
+  { name: "community", path: "/community" },
+];
 
 const activeNavItem = ["product", "community", "profile", "favList", "upload"];
 
@@ -124,12 +127,18 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
                   />
                 </div>
                 {navItem.map((nav, i) => (
-                  <div key={i}>
+                  <div key={i} className="relative">
                     <span
-                      onClick={() => onNavigate(nav, user?.username)}
+                      onClick={() => onNavigate(nav.name, user?.username)}
                       className="text-gray-400 cursor-pointer font-bold hover:text-gray-700 transition-all"
                     >
-                      {nav}
+                      {nav.name}
+                      {router.pathname === nav.path && (
+                        <motion.span
+                          className="w-2 h-2 rounded-full bg-red-500 absolute -bottom-2 left-0 right-0 m-auto"
+                          layoutId="circle"
+                        />
+                      )}
                     </span>
                   </div>
                 ))}

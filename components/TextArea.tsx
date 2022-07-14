@@ -1,13 +1,17 @@
 import React from "react";
 
-const TextArea: React.FC = () => {
+interface TextAreaProps {
+  label: string;
+}
+
+const TextArea: React.FC<TextAreaProps> = ({ label }) => {
   return (
     <div className="flex flex-col pb-2">
       <label
         htmlFor="description"
         className="text-lg font-bold mb-2 cursor-pointer"
       >
-        Description
+        {label}
       </label>
       <textarea
         name=""

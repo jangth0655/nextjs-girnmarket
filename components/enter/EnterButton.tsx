@@ -12,7 +12,7 @@ const EnterButton: React.FC<ButtonProps> = ({ text, loading, errorState }) => {
     <button
       className={cls(
         errorState ? "opacity-50" : "",
-        "w-full bg-pink-500 rounded-md py-2 text-white"
+        "w-full bg-pink-300 rounded-md py-2 text-white hover:bg-pink-500 transition-all"
       )}
     >
       {loading ? "Loading..." : text}
