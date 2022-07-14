@@ -1,7 +1,15 @@
+import Layout from "@components/Layout";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 
 const Community: NextPage = () => {
-  return <h1> Community</h1>;
+  const router = useRouter();
+
+  return (
+    <Layout>
+      <h1>Community</h1>
+    </Layout>
+  );
 };
 
 export default Community;

@@ -1,21 +1,25 @@
 import useUser from "@libs/client/useUser";
 import { Variants, motion, AnimatePresence } from "framer-motion";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import logo from "../public/image/logo.png";
+import NavTitle from "./NavTitle";
 import ProfileNav from "./ProfileNav";
 import SearchIcon from "./SearchIcon";
 
 interface LayoutProps {
   children: React.ReactNode;
+  head?: string;
+  title?: string;
 }
 
 const navItem = ["product", "community"];
 
-const activeNavItem = ["product", "community", "profile", "favList"];
+const activeNavItem = ["product", "community", "profile", "favList", "upload"];
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
   const router = useRouter();
   const [windowSize, setWindowSize] = useState(0);
   const [activeNav, setActiveNav] = useState(false);
@@ -54,6 +58,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         break;
       case "favList":
         router.push(`/users/${username}/favList`);
+      case "upload":
+        onUpload();
+        break;
+      default:
+        return;
+    }
+  };
+
+  const onHome = () => {
+    router.push("/");
+  };
+
+  const goBack = () => {
+    router.back();
+  };
+
+  const onUpload = () => {
+    const path = router.pathname;
+    switch (path) {
+      case "/":
+        router.push("/uploads/newProduct");
+        break;
+      case "/community":
+        router.push("/uploads/newCommunity");
+        break;
       default:
         return;
     }
@@ -76,13 +105,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <section>
+      <Head>
+        <title>{head} | Grin</title>
+      </Head>
       <div className="p-4 m-auto">
-        <nav className="fixed px-4 w-full right-0 flex justify-between items-center  bg-white">
+        <nav className="fixed top-0 p-4 w-full right-0 flex justify-between items-center  bg-white">
           {windowSize > 768 ? (
             <>
               <div className="flex items-center space-x-6">
                 <div className="relative w-20 h-20 mr-8">
                   <Image
+                    onClick={() => onHome()}
+                    className="cursor-pointer"
                     src={logo}
                     layout="fill"
                     objectFit="cover"
@@ -101,6 +135,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 ))}
               </div>
 
+              <NavTitle title={title} />
+
               <div className="flex items-center space-x-4">
                 <SearchIcon />
 
@@ -116,7 +152,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
 
                 <div>
-                  <button className="p-2 bg-pink-400 rounded-md text-white transition-all hover:bg-pink-600">
+                  <button
+                    onClick={() => onUpload()}
+                    className="p-2 bg-pink-400 rounded-md text-white transition-all hover:bg-pink-600"
+                  >
                     Upload
                   </button>
                 </div>
@@ -127,13 +166,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="flex items-center space-x-6 relative">
                 <div className="relative w-20 h-20 mr-8">
                   <Image
+                    onClick={() => onHome()}
                     src={logo}
                     layout="fill"
                     objectFit="cover"
                     alt="logo"
+                    className="cursor-pointer"
                   />
                 </div>
               </div>
+
+              <NavTitle title={title} />
 
               <div className="flex items-center space-x-4">
                 <SearchIcon />
@@ -177,13 +220,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           )}
         </nav>
 
-        <div className="mt-24 mb-20 w-full h-[1px] bg-gray-300" />
+        <div className="mt-24 mb-6 w-full h-[1px] bg-gray-300" />
+        <div className="mb-10 w-12 border-2 rounded-md flex justify-center items-center border-slate-300">
+          <svg
+            onClick={() => goBack()}
+            className="h-6 w-6 text-gray-400 hover:text-gray-700  transition-all cursor-pointer"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+          </svg>
+        </div>
         <main
           onClick={() => {
             setActiveNav(false);
             setProfileNav(false);
           }}
-          className="max-w-2xl m-auto min-h-screen"
+          className="px-4 m-auto min-h-screen"
         >
           {children}
         </main>
