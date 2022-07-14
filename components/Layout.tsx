@@ -109,14 +109,14 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
   return (
     <section>
       <Head>
-        <title>{head} | Grin</title>
+        <title>{head}</title>
       </Head>
-      <div className="p-4 m-auto">
-        <nav className="fixed top-0 p-4 w-full right-0 flex justify-between items-center  bg-white">
+      <div className="p-4  mb-2">
+        <nav className="fixed top-0 p-2 w-full right-0 flex justify-between items-center  bg-white border-b-2 z-20 border-gray-50 shadow-sm">
           {windowSize > 768 ? (
             <>
               <div className="flex items-center space-x-6">
-                <div className="relative w-20 h-20 mr-8">
+                <div className="relative w-16 h-16 mr-8">
                   <Image
                     onClick={() => onHome()}
                     className="cursor-pointer"
@@ -229,8 +229,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
           )}
         </nav>
 
-        <div className="mt-24 mb-6 w-full h-[1px] bg-gray-300" />
-        <div className="mb-10 w-12 border-2 rounded-md flex justify-center items-center border-slate-300">
+        <div className="mb-32 w-12 border-2 rounded-md flex justify-center items-center border-slate-300">
           <svg
             onClick={() => goBack()}
             className="h-6 w-6 text-gray-400 hover:text-gray-700  transition-all cursor-pointer"
@@ -246,7 +245,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
             setActiveNav(false);
             setProfileNav(false);
           }}
-          className="px-4 m-auto min-h-screen"
+          className="min-h-screen"
         >
           {children}
         </main>

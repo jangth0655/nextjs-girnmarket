@@ -1,4 +1,5 @@
 import React from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 type Type = "text" | "number";
 
@@ -7,9 +8,16 @@ interface InputProps {
   label: string;
   placeholder: string;
   type: Type;
+  register?: UseFormRegisterReturn;
 }
 
-const Input: React.FC<InputProps> = ({ label, placeholder, type, id }) => {
+const Input: React.FC<InputProps> = ({
+  label,
+  placeholder,
+  type,
+  id,
+  register,
+}) => {
   return (
     <>
       {type === "text" && (
@@ -18,6 +26,7 @@ const Input: React.FC<InputProps> = ({ label, placeholder, type, id }) => {
             {label}
           </label>
           <input
+            {...register}
             id={id}
             type={type}
             placeholder={placeholder}
@@ -34,6 +43,7 @@ const Input: React.FC<InputProps> = ({ label, placeholder, type, id }) => {
             <input
               id={id}
               type={type}
+              {...register}
               placeholder={placeholder}
               className="w-full pl-10 placeholder:text-sm rounded-md bg-slate-100 text-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-pink-300 transition-all py-2 "
             />

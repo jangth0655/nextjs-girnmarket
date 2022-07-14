@@ -49,6 +49,10 @@ const handler = async (
         session: { user },
       } = req;
 
+      if (!productId) {
+        return res.json({ ok: false, error: "Image is required." });
+      }
+
       const product = await client.product.create({
         data: {
           name,
@@ -81,7 +85,8 @@ const handler = async (
           },
         });
       }
-      return res.status(201).json({ ok: true, product, productPhoto });
+
+      return res.status(201).json({ ok: true });
     }
   } catch (e) {
     console.log(`${e} Error in handler`);

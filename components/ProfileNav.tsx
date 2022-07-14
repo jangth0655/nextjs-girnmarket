@@ -42,14 +42,17 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
     <AnimatePresence>
       {profileNav ? (
         <motion.div
-          className="absolute bg-slate-200 top-10 py-2 px-4 space-y-2 rounded-md origin-top"
+          className="absolute left-2 bg-slate-200 top-10 py-4  space-y-2 rounded-full rounded-tl-none origin-top"
           variants={navVariant}
           initial="initial"
           animate="animate"
           exit="exit"
         >
           {profileNavItem.map((nav, i) => (
-            <div key={i} className="cursor-pointer">
+            <div
+              key={i}
+              className="cursor-pointer  w-full px-8 hover:text-gray-800 text-gray-400 transition-all "
+            >
               <span onClick={() => onProfileAndFavList(nav, username)}>
                 {nav}
               </span>
