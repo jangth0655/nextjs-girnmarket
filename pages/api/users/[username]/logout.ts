@@ -9,11 +9,15 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   try {
-    const { email } = req.body;
+    const {
+      query: { username },
+    } = req;
+
+    console.log(username);
 
     const user = await client.user.findUnique({
       where: {
-        email,
+        username: username + "",
       },
       select: {
         id: true,
@@ -21,13 +25,13 @@ const handler = async (
     });
 
     if (!user) {
-      return res.json({ ok: false, error: "이메일이 올바르지 않습니다." });
+      return res.json({ ok: false, error: "사용자를 찾을 수 없습니다." });
     } else {
       req.session.user = {
         id: user.id,
       };
     }
-    await req.session.save();
+    await req.session.destroy();
     return res.status(201).json({ ok: true });
   } catch (e) {
     console.log(`${e} Error in handler`);
@@ -38,7 +42,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["POST"],
+    method: ["GET"],
     isPrivate: false,
   })
 );

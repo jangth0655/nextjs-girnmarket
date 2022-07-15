@@ -8,32 +8,26 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   try {
-    const { token } = req.body;
-
-    const foundToken = await client.token.findUnique({
+    const {
+      query: { username },
+    } = req;
+    const existUser = await client.user.findUnique({
       where: {
-        payload: token,
+        username: username + "",
       },
       select: {
+        username: true,
         id: true,
-        userId: true,
+        avatar: true,
+        email: true,
       },
     });
-
-    if (!foundToken) {
-      return res.json({ ok: false, error: "Could not found user." });
-    } else {
-      req.session.user = {
-        id: foundToken.userId,
-      };
+    if (!existUser) {
+      return res
+        .status(404)
+        .json({ ok: false, error: "Could not found user." });
     }
-    await req.session.save();
-    await client.token.deleteMany({
-      where: {
-        userId: foundToken.userId,
-      },
-    });
-    return res.status(201).json({ ok: true });
+    return res.status(200).json({ ok: true, userProfile: existUser });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
@@ -43,7 +37,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["POST"],
-    isPrivate: false,
+    method: ["GET"],
+    isPrivate: true,
   })
 );

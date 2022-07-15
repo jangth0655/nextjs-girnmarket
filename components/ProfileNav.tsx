@@ -1,16 +1,21 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 
-const profileNavItem = ["profile", "favList"];
+const profileNavItem = ["profile", "favList", "logout"];
 
 interface ProfileNavProps {
   username?: string;
   profileNav?: boolean;
 }
 
+interface LogoutResponse {
+  ok: boolean;
+}
+
 const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
   const router = useRouter();
+
   const onProfileAndFavList = (nav: string, username?: string) => {
     switch (nav) {
       case "profile":
@@ -18,10 +23,24 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
         break;
       case "favList":
         router.push(`/users/${username}/favList`);
+      case "logout":
+        onLogout();
       default:
         return;
     }
   };
+
+  let response: LogoutResponse;
+  const onLogout = async () => {
+    response = await (await fetch(`/api/users/${username}/logout`)).json();
+  };
+
+  useEffect(() => {
+    console.log(response);
+    if (response && response.ok) {
+      router.push("/enter");
+    }
+  }, [router]);
 
   const navVariant: Variants = {
     initial: {

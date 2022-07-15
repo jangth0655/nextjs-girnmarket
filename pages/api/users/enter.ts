@@ -18,9 +18,9 @@ const handler = async (
         id: true,
       },
     });
-    if (user) {
+    /* if (user) {
       return res.status(401).json({ ok: false, error: "중복된 입력입니다." });
-    }
+    } */
     const token = await client.token.create({
       data: {
         payload,
@@ -37,6 +37,7 @@ const handler = async (
         },
       },
     });
+
     return res.status(201).json({ ok: true, token: token.payload });
   } catch (e) {
     console.log(`${e} Error in handler`);

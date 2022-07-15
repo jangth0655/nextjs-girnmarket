@@ -85,7 +85,7 @@ const Enter: NextPage = () => {
 
   useEffect(() => {
     if (tokenData && tokenData.ok) {
-      router.replace("/login");
+      router.replace("/");
     }
   }, [router, tokenData]);
 
@@ -111,19 +111,11 @@ const Enter: NextPage = () => {
     <section className="min-h-screen flex text-gray-700">
       {windowSize > 965 ? (
         <div className="relative w-[50%] h-screen">
-          <Image
-            src={enterImage}
-            layout="fill"
-            objectFit="contain"
-            alt="enter"
-          />
+          <Image src={enterImage} layout="fill" objectFit="cover" alt="enter" />
         </div>
       ) : null}
       <main
-        className={cls(
-          "py-24 px-4  m-auto",
-          windowSize < 965 ? "w-full" : "w-[40%]"
-        )}
+        className={cls("py-24 m-auto", windowSize < 965 ? "w-full" : "w-[50%]")}
       >
         <div className="max-w-sm m-auto space-y-12">
           <div>
@@ -172,11 +164,11 @@ const Enter: NextPage = () => {
                   />
                 </form>
               </div>
-              <EnterLinkMessage
+              {/*   <EnterLinkMessage
                 link={"/enter"}
                 text="Go Back"
                 enterMessage="Sign up now"
-              />
+              /> */}
             </>
           ) : (
             <>
@@ -222,17 +214,17 @@ const Enter: NextPage = () => {
                     />
                   </div>
                   <EnterButton
-                    text="Create Account"
+                    text="Log in"
                     errorState={Boolean(ErrorState)}
                     loading={loading}
                   />
                 </form>
               </div>
-              <EnterLinkMessage
+              {/*  <EnterLinkMessage
                 link={"/login"}
                 text="Already a member?"
                 enterMessage="Log in now"
-              />
+              /> */}
             </>
           )}
         </div>

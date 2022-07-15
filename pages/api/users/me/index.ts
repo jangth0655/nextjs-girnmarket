@@ -25,14 +25,14 @@ const handler = async (
         },
       });
       if (!existUser) {
-        return res
-          .status(404)
-          .json({ ok: false, error: "Could not found user." });
+        return res.json({ ok: false, error: "Could not found user." });
       }
-      return res.status(200).json({ ok: true, user: existUser });
+      return res
+        .status(200)
+        .json({ ok: true, user: existUser ? existUser : null });
     }
 
-    if (req.method === "POSt") {
+    if (req.method === "POST") {
       const { email, username, avatarId } = req.body;
       const currentUser = await client.user.findUnique({
         where: {
@@ -45,7 +45,7 @@ const handler = async (
       });
       if (email && email !== currentUser?.email) {
         if (email === currentUser?.email) {
-          return res.json({ ok: false, error: "이메일이 이미 존합다." });
+          return res.json({ ok: false, error: "이메일이 이미 존재합다." });
         }
         await client.user.update({
           where: {
@@ -92,6 +92,6 @@ export default withSessionAPI(
   withHandler({
     handler,
     method: ["GET", "POST"],
-    isPrivate: true,
+    isPrivate: false,
   })
 );
