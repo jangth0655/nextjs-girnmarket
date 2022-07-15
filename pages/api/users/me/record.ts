@@ -10,7 +10,7 @@ const handler = async (
   try {
     const {
       session: { user },
-      query: { kind, page },
+      query: { kind, page = 1 },
     } = req;
 
     const pageSize = 5;
@@ -23,6 +23,11 @@ const handler = async (
           kind: "Sale",
         },
         select: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
           product: {
             include: {
               _count: {
@@ -46,6 +51,11 @@ const handler = async (
           kind: "Purchase",
         },
         select: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
           product: {
             include: {
               _count: {
@@ -69,6 +79,11 @@ const handler = async (
           kind: "FavList",
         },
         select: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
           product: {
             include: {
               _count: {

@@ -28,7 +28,7 @@ const SearchIcon: React.FC = () => {
           type="text"
           transition={{ type: "linear" }}
           placeholder="Search"
-          className="border-2 pl-10 rounded-lg origin-right border-gray-200 placeholder:text-sm text-gray-700"
+          className="border-2 pl-10 rounded-lg origin-right border-gray-200 placeholder:text-sm text-gray-700 focus:border-pink-400"
         />
       ) : null}
       <motion.svg

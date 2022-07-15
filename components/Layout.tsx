@@ -1,9 +1,15 @@
 import useUser from "@libs/client/useUser";
-import { Variants, motion, AnimatePresence } from "framer-motion";
+import {
+  Variants,
+  motion,
+  AnimatePresence,
+  useViewportScroll,
+  useAnimation,
+} from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import logo from "../public/image/logo.png";
 import NavTitle from "./NavTitle";
 import ProfileNav from "./ProfileNav";
@@ -22,12 +28,25 @@ const navItem = [
 
 const activeNavItem = ["product", "community", "profile", "favList", "upload"];
 
+const scrollVariant: Variants = {
+  top: {
+    opacity: 0,
+  },
+  scroll: {
+    opacity: 0.6,
+  },
+};
+
 const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
   const router = useRouter();
   const [windowSize, setWindowSize] = useState(0);
   const [activeNav, setActiveNav] = useState(false);
   const [profileNav, setProfileNav] = useState(false);
   const { user } = useUser({ isPrivate: false });
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const scrollAnimation = useAnimation();
+  const { scrollY } = useViewportScroll();
 
   const handleSize = useCallback(() => {
     setWindowSize(window.innerWidth);
@@ -77,6 +96,10 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
     router.back();
   };
 
+  const onEnter = () => {
+    router.push("/enter");
+  };
+
   const onUpload = () => {
     const path = router.pathname;
     switch (path) {
@@ -107,12 +130,26 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
     },
   };
 
+  const onTop = () => {
+    navRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  useEffect(() => {
+    scrollY.onChange(() => {
+      if (scrollY.get() < window.innerHeight / 2) {
+        scrollAnimation.start("top");
+      } else {
+        scrollAnimation.start("scroll");
+      }
+    });
+  }, [scrollY, scrollAnimation]);
+
   return (
     <section>
       <Head>
         <title>{head}</title>
       </Head>
-      <div className="p-4  mb-2">
+      <div ref={navRef} className="p-4  mb-2">
         <nav className="fixed top-0 p-2 w-full right-0 flex justify-between items-center  bg-white border-b-2 z-20 border-gray-50 shadow-sm">
           {windowSize > 768 ? (
             <>
@@ -150,25 +187,35 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
               <div className="flex items-center space-x-4">
                 <SearchIcon />
 
-                <div className="w-8 h-8 relative">
-                  <div
-                    onClick={() => setProfileNav((prev) => !prev)}
-                    className="w-full h-full rounded-full bg-slate-300 cursor-pointer"
-                  />
-                  <ProfileNav
-                    profileNav={profileNav}
-                    username={user?.username}
-                  />
-                </div>
+                {user?.id ? (
+                  <div className="w-8 h-8 relative">
+                    <div
+                      onClick={() => setProfileNav((prev) => !prev)}
+                      className="w-full h-full rounded-full bg-slate-300 cursor-pointer"
+                    />
+                    <ProfileNav
+                      profileNav={profileNav}
+                      username={user?.username}
+                    />
+                  </div>
+                ) : (
+                  <div onClick={() => onEnter()}>
+                    <button className="px-4 bg-pink-400 rounded-md text-white hover:bg-pink-600 transition-all">
+                      Log In
+                    </button>
+                  </div>
+                )}
 
-                <div>
-                  <button
-                    onClick={() => onUpload()}
-                    className="p-2 bg-pink-400 rounded-md text-white transition-all hover:bg-pink-600"
-                  >
-                    Upload
-                  </button>
-                </div>
+                {user?.id && (
+                  <div>
+                    <button
+                      onClick={() => onUpload()}
+                      className="p-2 bg-pink-400 rounded-md text-white transition-all hover:bg-pink-600"
+                    >
+                      Upload
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (
@@ -230,17 +277,6 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
           )}
         </nav>
 
-        <div className="mb-32 w-12 border-2 rounded-md flex justify-center items-center border-slate-300">
-          <svg
-            onClick={() => goBack()}
-            className="h-6 w-6 text-gray-400 hover:text-gray-700  transition-all cursor-pointer"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-          </svg>
-        </div>
         <main
           onClick={() => {
             setActiveNav(false);
@@ -248,7 +284,36 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
           }}
           className="min-h-screen"
         >
+          <div className="mt-24 mb-8 w-7 h-7 border-2 rounded-md flex justify-center items-center border-slate-300 cursor-pointer">
+            <svg
+              onClick={() => goBack()}
+              className="h-5 w-5 text-gray-400 hover:text-gray-700  transition-all cursor-pointer"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+          </div>
+
           {children}
+          <motion.div
+            variants={scrollVariant}
+            initial="top"
+            animate={scrollAnimation}
+            onClick={onTop}
+            className="fixed w-8 h-8 bg-pink-400 opacity-60 hover:opacity-100 transition-all bottom-2 right-4 rounded-full cursor-pointer"
+          >
+            <svg
+              className="h-8 w-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M7 11l5-5m0 0l5 5m-5-5v12" />
+            </svg>
+          </motion.div>
         </main>
       </div>
     </section>
