@@ -51,9 +51,12 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
           {profileNavItem.map((nav, i) => (
             <div
               key={i}
-              className="cursor-pointer  w-full px-8 hover:text-gray-800 text-gray-400 transition-all "
+              className="cursor-pointer  w-full px-8 hover:text-gray-800 text-gray-400 transition-all"
             >
-              <span onClick={() => onProfileAndFavList(nav, username)}>
+              <span
+                className="hover:border-b-[1.5px] border-gray-500"
+                onClick={() => onProfileAndFavList(nav, username)}
+              >
                 {nav}
               </span>
             </div>

@@ -13,7 +13,6 @@ const UploadImage: React.FC<UploadImageProps> = ({
   register,
   imageRequired,
 }) => {
-  console.log(imageRequired);
   return (
     <label
       htmlFor="image"
