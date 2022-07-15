@@ -87,6 +87,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
         router.push("/uploads/newCommunity");
         break;
       default:
+        router.push("/");
         return;
     }
   };

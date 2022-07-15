@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
+import useUser from "@libs/client/useUser";
 
 const profileNavItem = ["profile", "favList", "logout"];
 
@@ -23,24 +24,19 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
         break;
       case "favList":
         router.push(`/users/${username}/favList`);
+        break;
       case "logout":
         onLogout();
+        break;
       default:
         return;
     }
   };
 
-  let response: LogoutResponse;
   const onLogout = async () => {
-    response = await (await fetch(`/api/users/${username}/logout`)).json();
+    await (await fetch(`/api/users/${username}/logout`)).json();
+    router.replace("/enter");
   };
-
-  useEffect(() => {
-    console.log(response);
-    if (response && response.ok) {
-      router.push("/enter");
-    }
-  }, [router]);
 
   const navVariant: Variants = {
     initial: {
@@ -69,15 +65,21 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
         >
           {profileNavItem.map((nav, i) => (
             <div
+              onClick={() => onProfileAndFavList(nav, username)}
               key={i}
-              className="cursor-pointer  w-full px-8 hover:text-gray-800 text-gray-400 transition-all"
+              className="cursor-pointer  w-full  hover:text-gray-800 text-gray-400 transition-all px-8"
             >
-              <span
-                className="hover:border-b-[1.5px] border-gray-500"
-                onClick={() => onProfileAndFavList(nav, username)}
-              >
-                {nav}
-              </span>
+              {username ? (
+                <span className="hover:border-b-[1.5px] border-gray-500 ">
+                  {nav}
+                </span>
+              ) : (
+                nav !== "logout" && (
+                  <span className="hover:border-b-[1.5px] border-gray-500 ">
+                    {nav}
+                  </span>
+                )
+              )}
             </div>
           ))}
         </motion.div>

@@ -13,8 +13,6 @@ const handler = async (
       query: { username },
     } = req;
 
-    console.log(username);
-
     const user = await client.user.findUnique({
       where: {
         username: username + "",

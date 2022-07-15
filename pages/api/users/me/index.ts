@@ -12,76 +12,28 @@ const handler = async (
       session: { user },
     } = req;
 
-    if (req.method === "GET") {
-      const existUser = await client.user.findUnique({
-        where: {
-          id: user?.id,
-        },
-        select: {
-          username: true,
-          id: true,
-          avatar: true,
-          email: true,
-        },
-      });
-      if (!existUser) {
-        return res.json({ ok: false, error: "Could not found user." });
-      }
-      return res
-        .status(200)
-        .json({ ok: true, user: existUser ? existUser : null });
+    if (req.session.user === undefined) {
+      return res.json({ ok: false });
     }
 
-    if (req.method === "POST") {
-      const { email, username, avatarId } = req.body;
-      const currentUser = await client.user.findUnique({
-        where: {
-          id: user?.id,
-        },
-        select: {
-          username: true,
-          email: true,
-        },
-      });
-      if (email && email !== currentUser?.email) {
-        if (email === currentUser?.email) {
-          return res.json({ ok: false, error: "이메일이 이미 존재합다." });
-        }
-        await client.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            email,
-          },
-        });
-        return res.status(201).json({ ok: true });
-      }
-      if (username && username !== currentUser?.username) {
-        if (username === currentUser?.username) {
-          return res.json({ ok: false, error: "username이 이미 존재합니다." });
-        }
-        await client.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            username,
-          },
-        });
-        return res.status(201).json({ ok: true });
-      }
-      if (avatarId) {
-        await client.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            avatar: avatarId,
-          },
-        });
-      }
+    const existUser = await client.user.findUnique({
+      where: {
+        id: user?.id,
+      },
+      select: {
+        username: true,
+        id: true,
+        avatar: true,
+        email: true,
+      },
+    });
+
+    if (!existUser) {
+      return res.json({ ok: false, error: "Could not found user." });
     }
+    return res
+      .status(200)
+      .json({ ok: true, user: existUser ? existUser : null });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
@@ -91,7 +43,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET", "POST"],
+    method: ["GET"],
     isPrivate: false,
   })
 );
