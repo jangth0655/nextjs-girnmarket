@@ -4,7 +4,6 @@ import Input from "@components/Input";
 import Layout from "@components/Layout";
 import SmallButton from "@components/SmallButton";
 import TextArea from "@components/TextArea";
-import { deleteImage } from "@libs/client/deleteImage";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
 import useUser from "@libs/client/useUser";
@@ -28,10 +27,19 @@ interface EditMutation {
   ok: boolean;
 }
 
+interface DeleteImage {
+  ok: boolean;
+  result: {
+    errors: string[];
+    success: boolean;
+  };
+}
+
 const EditProfile: NextPage = () => {
   const router = useRouter();
   const { user } = useUser({ isPrivate: true });
   const [preview, setPreview] = useState("");
+  const [stopDelete, setStopDelete] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const [edit, { loading, data, error }] =
     useMutation<EditMutation>(`/api/users/me/edit`);
@@ -47,7 +55,6 @@ const EditProfile: NextPage = () => {
   const onValid = async (data: EditForm) => {
     if (loading) return;
     if (data.image && data?.image.length > 0) {
-      console.log(data.image);
       const { uploadURL } = await (await fetch("/api/file")).json();
       const form = new FormData();
       form.append("file", data?.image[0], `${user?.username}_avatar`);
@@ -74,10 +81,22 @@ const EditProfile: NextPage = () => {
     }
   };
 
-  const onDeleteAvatar = (avatarId?: string) => {
-    if (!avatarId) return;
-    alert("really?");
-    deleteImage(avatarId);
+  const onDeleteAvatar = async (avatarId?: string) => {
+    if (!avatarId || undefined) return;
+    window.confirm("Do your really want to delete avatar");
+    setStopDelete(true);
+    setPreview((prev) => "");
+    const response: DeleteImage = await (
+      await fetch(`/api/deleteFile/${avatarId}`)
+    ).json();
+
+    if (response && !response.result?.success) {
+      setStopDelete(false);
+      router.reload();
+    }
+    if (response && response.ok) {
+      router.push("/");
+    }
   };
 
   const image = watch("image");
@@ -104,6 +123,12 @@ const EditProfile: NextPage = () => {
     }
   }, [data, router]);
 
+  useEffect(() => {
+    setStopDelete(false);
+  }, []);
+
+  console.log(stopDelete);
+
   return (
     <Layout head="Edit" title="Edit Profile">
       <div className="max-w-4xl m-auto">
@@ -117,6 +142,7 @@ const EditProfile: NextPage = () => {
                   objectFit="cover"
                   alt=""
                   className="rounded-full"
+                  priority
                 />
               ) : (
                 <div className="w-full h-full rounded-full flex justify-center items-center border-2 border-gray-400">
@@ -156,7 +182,13 @@ const EditProfile: NextPage = () => {
                 onClick={() => onDeleteAvatar(user?.avatar || undefined)}
                 className="w-full"
               >
-                <SmallButton text="Delete" />
+                {stopDelete ? (
+                  <div className="hidden">
+                    <SmallButton text="Delete" />
+                  </div>
+                ) : (
+                  <SmallButton text="Delete" />
+                )}
               </div>
             </div>
           </div>

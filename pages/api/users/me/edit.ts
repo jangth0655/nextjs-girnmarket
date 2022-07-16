@@ -23,6 +23,7 @@ const handler = async (
       select: {
         username: true,
         email: true,
+        avatar: true,
       },
     });
 
@@ -84,7 +85,7 @@ const handler = async (
       });
     }
 
-    if (avatarId) {
+    if (avatarId && avatarId !== currentUser?.avatar) {
       await client.user.update({
         where: {
           id: user?.id,

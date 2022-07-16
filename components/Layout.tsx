@@ -1,3 +1,4 @@
+import { deliveryFile } from "@libs/client/deliveryImage";
 import useUser from "@libs/client/useUser";
 import {
   Variants,
@@ -162,6 +163,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
                     layout="fill"
                     objectFit="cover"
                     alt="logo"
+                    priority
                   />
                 </div>
                 {navItem.map((nav, i) => (
@@ -188,15 +190,34 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
                 <SearchIcon />
 
                 {user?.id ? (
-                  <div className="w-8 h-8 relative">
-                    <div
-                      onClick={() => setProfileNav((prev) => !prev)}
-                      className="w-full h-full rounded-full bg-slate-300 cursor-pointer"
-                    />
-                    <ProfileNav
-                      profileNav={profileNav}
-                      username={user?.username}
-                    />
+                  <div
+                    onClick={() => setProfileNav((prev) => !prev)}
+                    className="w-8 h-8 relative cursor-pointer"
+                  >
+                    {user.avatar ? (
+                      <>
+                        <Image
+                          src={deliveryFile(user.avatar)}
+                          layout="fill"
+                          objectFit="cover"
+                          alt=""
+                          className="rounded-full"
+                          priority
+                        />
+                        <ProfileNav
+                          profileNav={profileNav}
+                          username={user?.username}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-full h-full rounded-full bg-slate-300  relative"></div>
+                        <ProfileNav
+                          profileNav={profileNav}
+                          username={user?.username}
+                        />
+                      </>
+                    )}
                   </div>
                 ) : (
                   <div onClick={() => onEnter()}>
@@ -229,6 +250,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
                     objectFit="cover"
                     alt="logo"
                     className="cursor-pointer"
+                    priority
                   />
                 </div>
               </div>

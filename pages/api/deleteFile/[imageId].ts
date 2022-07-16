@@ -8,7 +8,11 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   try {
-    const { body: imageId } = req;
+    const {
+      query: { imageId },
+      session: { user },
+    } = req;
+
     const response = await (
       await fetch(
         `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_ACCOUNT_ID}/images/v1/${imageId}`,
@@ -20,10 +24,39 @@ const handler = async (
         }
       )
     ).json();
+
     if (!response) {
       return res.status(500).json({ ok: false, error: "CloudFlare error" });
     }
-    return res.status(200).json({ ok: true });
+
+    if (imageId) {
+      const existUser = await client.user.findUnique({
+        where: {
+          id: user?.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!existUser) {
+        return res
+          .status(400)
+          .json({ ok: false, error: "Could not found user." });
+      }
+
+      await client.user.update({
+        where: {
+          id: existUser?.id,
+        },
+        data: {
+          avatar: null,
+        },
+      });
+    }
+
+    console.log(response);
+    return res.status(200).json({ ok: true, result: response });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
@@ -33,7 +66,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["DELETE"],
+    method: ["POST", "GET"],
     isPrivate: true,
   })
 );
