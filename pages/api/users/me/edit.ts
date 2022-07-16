@@ -12,7 +12,10 @@ const handler = async (
       session: { user },
     } = req;
 
-    const { email, username, avatarId, bio, webSite } = req.body;
+    const { email, username, avatarId, bio, website } = req.body;
+
+    const confirmUser = username ? { username } : email && { email };
+
     const currentUser = await client.user.findUnique({
       where: {
         id: user?.id,
@@ -22,8 +25,17 @@ const handler = async (
         email: true,
       },
     });
+
+    const existUser = await client.user.findUnique({
+      where: confirmUser,
+      select: {
+        username: true,
+        email: true,
+      },
+    });
+
     if (email && email !== currentUser?.email) {
-      if (email === currentUser?.email) {
+      if (email === existUser?.email) {
         return res.json({ ok: false, error: "이메일이 이미 존재합다." });
       }
       await client.user.update({
@@ -34,10 +46,10 @@ const handler = async (
           email,
         },
       });
-      return res.status(201).json({ ok: true });
     }
+
     if (username && username !== currentUser?.username) {
-      if (username === currentUser?.username) {
+      if (username === existUser?.username) {
         return res.json({ ok: false, error: "username이 이미 존재합니다." });
       }
       await client.user.update({
@@ -48,7 +60,6 @@ const handler = async (
           username,
         },
       });
-      return res.status(201).json({ ok: true });
     }
 
     if (bio) {
@@ -62,13 +73,13 @@ const handler = async (
       });
     }
 
-    if (webSite) {
+    if (website) {
       await client.user.update({
         where: {
           id: user?.id,
         },
         data: {
-          webSite,
+          website,
         },
       });
     }
@@ -83,6 +94,8 @@ const handler = async (
         },
       });
     }
+
+    return res.status(201).json({ ok: true });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });

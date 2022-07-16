@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { User } from "@prisma/client";
 import { dateFormate } from "@libs/client/dateFormat";
+import Image from "next/image";
+import { deliveryFile } from "@libs/client/deliveryImage";
 
 const profileRecord = [
   { name: "Product", id: "product", isPrivate: false },
@@ -16,9 +18,16 @@ const profileRecord = [
   { name: "Like", id: "favList", isPrivate: true },
   { name: "Purchases", id: "purchase", isPrivate: true },
   { name: "Sales", id: "sale", isPrivate: true },
+  { name: "About", id: "about", isPrivate: false },
 ];
 
-export type MarkType = "product" | "post" | "favList" | "purchase" | "sale";
+export type MarkType =
+  | "product"
+  | "post"
+  | "favList"
+  | "purchase"
+  | "sale"
+  | "about";
 
 interface UserProfileResponse {
   ok: boolean;
@@ -27,12 +36,13 @@ interface UserProfileResponse {
 
 const Profile: NextPage = () => {
   const router = useRouter();
+  const { user } = useUser({ isPrivate: false });
   const [confirmUser, setConfirmUser] = useState(false);
   const { data, error } = useSWR<UserProfileResponse>(
     router.query.username && `/api/users/${router.query.username}`
   );
 
-  const { user } = useUser({ isPrivate: false });
+  const loading = !data && !error;
 
   const [mark, setMark] = useState<MarkType>("product");
 
@@ -58,16 +68,40 @@ const Profile: NextPage = () => {
   return (
     <Layout title="Profile" head="Profile">
       <div className="flex justify-center items-center space-x-8">
-        <div>
-          <div className="w-36 h-36 rounded-full bg-slate-400" />
-        </div>
-        <div className="space-y-4">
-          <div className="flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl mb-2">
-              {data?.userProfile.username}
-            </span>
-            <span>{dateFormate(data?.userProfile?.createdAt)}</span>
+        {user?.avatar ? (
+          <div className="relative w-36 h-36 rounded-full">
+            <Image
+              src={deliveryFile(user?.avatar)}
+              layout="fill"
+              objectFit="cover"
+              alt=""
+              className="rounded-full"
+            />
           </div>
+        ) : (
+          <div className="w-36 h-36 border-2 border-gray-400 rounded-full flex justify-center items-center">
+            <svg
+              className="h-24 w-24 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="1"
+            >
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        )}
+        <div className="space-y-4">
+          {loading ? (
+            "Loading"
+          ) : (
+            <div className="flex flex-col justify-center items-center">
+              <span className="font-bold text-2xl mb-2">
+                {data?.userProfile.username}
+              </span>
+              <span>{dateFormate(data?.userProfile?.createdAt)}</span>
+            </div>
+          )}
           {confirmUser && (
             <div onClick={() => onEditProfile(data?.userProfile?.username)}>
               <button className="p-2 font-bold  rounded-md bg-pink-300 text-white hover:bg-pink-600 transition-all">

@@ -21,7 +21,7 @@ model User {
   username String @unique
   avatar String?
   bio String?
-  webSite String?
+  website String?
   tokens Token[]
   products Product[]
   reviews Review[]

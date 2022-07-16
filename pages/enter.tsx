@@ -164,11 +164,6 @@ const Enter: NextPage = () => {
                   />
                 </form>
               </div>
-              {/*   <EnterLinkMessage
-                link={"/enter"}
-                text="Go Back"
-                enterMessage="Sign up now"
-              /> */}
             </>
           ) : (
             <>
@@ -220,11 +215,6 @@ const Enter: NextPage = () => {
                   />
                 </form>
               </div>
-              {/*  <EnterLinkMessage
-                link={"/login"}
-                text="Already a member?"
-                enterMessage="Log in now"
-              /> */}
             </>
           )}
         </div>

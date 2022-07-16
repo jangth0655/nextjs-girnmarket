@@ -9,6 +9,7 @@ interface ItemsProps {
   myProducts?: ProductWithCount[];
   myPurchase?: ProductWithUser[];
   mySales?: ProductWithUser[];
+  myFav?: ProductWithUser[];
   posts?: UserWithPost;
 }
 
@@ -28,6 +29,7 @@ const Items: React.FC<ItemsProps> = ({
   posts,
   myProducts,
   mySales,
+  myFav,
 }) => {
   //console.log("items", products);
   const router = useRouter();
@@ -44,6 +46,11 @@ const Items: React.FC<ItemsProps> = ({
 
       {mySales &&
         mySales?.map((item) => (
+          <Item key={item.product.id} item={item.product} />
+        ))}
+
+      {myFav &&
+        myFav?.map((item) => (
           <Item key={item.product.id} item={item.product} />
         ))}
 

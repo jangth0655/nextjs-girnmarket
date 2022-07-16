@@ -1,5 +1,6 @@
 import { MarkType } from "pages/users/[username]/profile";
 import React from "react";
+import AboutItem from "./AboutItem";
 import LikeItem from "./LikeItem";
 import PostItem from "./PostItem";
 import ProductItem from "./ProductItem";
@@ -19,6 +20,7 @@ const Record: React.FC<RecordProps> = ({ mark, username }) => {
       {mark === "purchase" && <PurchaseItem username={username} />}
       {mark === "favList" && <LikeItem username={username} />}
       {mark === "sale" && <SaleItem username={username} />}
+      {mark === "about" && <AboutItem username={username} />}
     </div>
   );
 };

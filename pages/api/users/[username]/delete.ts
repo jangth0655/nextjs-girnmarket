@@ -9,33 +9,27 @@ const handler = async (
 ) => {
   try {
     const {
+      query: { username },
       session: { user },
     } = req;
-
-    if (req.session.user === undefined) {
-      return res.json({ ok: false });
-    }
 
     const existUser = await client.user.findUnique({
       where: {
         id: user?.id,
       },
-      select: {
-        username: true,
-        id: true,
-        avatar: true,
-        email: true,
-        bio: true,
-        website: true,
+      select: { id: true },
+    });
+    if (!existUser) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "Could not found user." });
+    }
+    const deleteUser = await client.user.delete({
+      where: {
+        id: existUser.id,
       },
     });
-
-    if (!existUser) {
-      return res.json({ ok: false, error: "Could not found user." });
-    }
-    return res
-      .status(200)
-      .json({ ok: true, user: existUser ? existUser : null });
+    return res.status(200).json({ ok: true });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
@@ -45,7 +39,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET"],
+    method: ["POST"],
     isPrivate: false,
   })
 );

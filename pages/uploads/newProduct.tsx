@@ -40,7 +40,7 @@ const NewProduct: NextPage = () => {
   } = useForm<UploadProductForm>();
   const [preview, setPreview] = useState("");
   const [imageRequired, setImageRequired] = useState(false);
-  console.log(imageRequired);
+
   const [createProduct, { loading, error, data }] =
     useMutation<UploadProductMutation>("/api/products");
 

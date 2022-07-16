@@ -37,8 +37,8 @@ const LikeItem: React.FC<LikeItemProps> = ({ username }) => {
   const loading = !data && !error;
 
   return (
-    <div className="w-ful">
-      {loading ? "Loading" : <Items products={data?.favList} />}
+    <div className="w-full">
+      {loading ? "Loading" : <Items myFav={data?.favList} />}
     </div>
   );
 };
