@@ -12,7 +12,7 @@ const handler = async (
       session: { user },
     } = req;
 
-    const { email, username, avatarId } = req.body;
+    const { email, username, avatarId, bio, webSite } = req.body;
     const currentUser = await client.user.findUnique({
       where: {
         id: user?.id,
@@ -50,6 +50,29 @@ const handler = async (
       });
       return res.status(201).json({ ok: true });
     }
+
+    if (bio) {
+      await client.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          bio,
+        },
+      });
+    }
+
+    if (webSite) {
+      await client.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          webSite,
+        },
+      });
+    }
+
     if (avatarId) {
       await client.user.update({
         where: {

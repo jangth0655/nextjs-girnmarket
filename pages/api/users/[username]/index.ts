@@ -20,6 +20,7 @@ const handler = async (
         id: true,
         avatar: true,
         email: true,
+        createdAt: true,
       },
     });
     if (!existUser) {

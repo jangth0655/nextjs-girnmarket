@@ -20,6 +20,8 @@ model User {
   email String @unique
   username String @unique
   avatar String?
+  bio String?
+  webSite String?
   tokens Token[]
   products Product[]
   reviews Review[]

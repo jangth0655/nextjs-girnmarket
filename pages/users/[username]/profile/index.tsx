@@ -8,6 +8,7 @@ import Record from "@components/userRecord/Record";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { User } from "@prisma/client";
+import { dateFormate } from "@libs/client/dateFormat";
 
 const profileRecord = [
   { name: "Product", id: "product", isPrivate: false },
@@ -49,6 +50,11 @@ const Profile: NextPage = () => {
     }
   }, [profileUser, user?.username]);
 
+  const onEditProfile = (username?: string) => {
+    if (!username) return;
+    router.push(`/users/${username}/profile/edit`);
+  };
+
   return (
     <Layout title="Profile" head="Profile">
       <div className="flex justify-center items-center space-x-8">
@@ -57,11 +63,13 @@ const Profile: NextPage = () => {
         </div>
         <div className="space-y-4">
           <div className="flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl">username</span>
-            <span>date</span>
+            <span className="font-bold text-2xl mb-2">
+              {data?.userProfile.username}
+            </span>
+            <span>{dateFormate(data?.userProfile?.createdAt)}</span>
           </div>
           {confirmUser && (
-            <div>
+            <div onClick={() => onEditProfile(data?.userProfile?.username)}>
               <button className="p-2 font-bold  rounded-md bg-pink-300 text-white hover:bg-pink-600 transition-all">
                 Edit Profile
               </button>
