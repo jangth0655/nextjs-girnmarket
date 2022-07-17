@@ -55,7 +55,6 @@ const handler = async (
       });
     }
 
-    console.log(response);
     return res.status(200).json({ ok: true, result: response });
   } catch (e) {
     console.log(`${e} Error in handler`);

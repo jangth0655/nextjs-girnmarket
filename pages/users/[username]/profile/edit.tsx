@@ -4,13 +4,13 @@ import Input from "@components/Input";
 import Layout from "@components/Layout";
 import SmallButton from "@components/SmallButton";
 import TextArea from "@components/TextArea";
+import { DeleteImage, deleteImage } from "@libs/client/deleteImage";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
 import useUser from "@libs/client/useUser";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,14 +25,6 @@ interface EditForm {
 
 interface EditMutation {
   ok: boolean;
-}
-
-interface DeleteImage {
-  ok: boolean;
-  result: {
-    errors: string[];
-    success: boolean;
-  };
 }
 
 const EditProfile: NextPage = () => {
@@ -86,11 +78,8 @@ const EditProfile: NextPage = () => {
     window.confirm("Do your really want to delete avatar");
     setStopDelete(true);
     setPreview((prev) => "");
-    const response: DeleteImage = await (
-      await fetch(`/api/deleteFile/${avatarId}`)
-    ).json();
-
-    if (response && !response.result?.success) {
+    const response: DeleteImage | undefined = await deleteImage(avatarId);
+    if (response && !response?.result?.success) {
       setStopDelete(false);
       router.reload();
     }
@@ -126,8 +115,6 @@ const EditProfile: NextPage = () => {
   useEffect(() => {
     setStopDelete(false);
   }, []);
-
-  console.log(stopDelete);
 
   return (
     <Layout head="Edit" title="Edit Profile">
