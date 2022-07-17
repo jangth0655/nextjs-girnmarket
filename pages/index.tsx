@@ -1,34 +1,34 @@
+import ItemUl from "@components/items/ItemUl";
 import Layout from "@components/Layout";
-import PageTitle from "@components/PageTitle";
-import { Product } from "@prisma/client";
+import { Photo, Product, User } from "@prisma/client";
 import type { NextPage } from "next";
 import useSWR from "swr";
 
-interface ProductWithCount extends Product {
+export interface WithPhotoWithCountWithUser extends Product {
   _count: {
     favs: number;
   };
+  user: User;
+  photos: Photo[];
 }
 
 interface ProductListResponse {
   ok: boolean;
-  products: ProductWithCount[];
+  products: WithPhotoWithCountWithUser[];
 }
 
 const Home: NextPage = () => {
   const { data, error } = useSWR<ProductListResponse>("/api/products");
-  console.log(data);
+
+  const loading = !data && !error;
+
   return (
     <Layout>
-      <PageTitle title="Choose your favorite" />
-      <main>
-        <div className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {data?.products.map((product) => (
-            // component
-            <div key={product.id}>{product.name}</div>
-          ))}
-        </div>
-      </main>
+      <ItemUl
+        title="Choose your favorite"
+        products={data?.products}
+        loading={loading}
+      />
     </Layout>
   );
 };

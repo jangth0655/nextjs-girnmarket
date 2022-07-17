@@ -30,6 +30,12 @@ const handler = async (
               favs: true,
             },
           },
+          photos: {
+            select: {
+              url: true,
+              id: true,
+            },
+          },
         },
         take: pageSize,
         skip: (pageNumber - 1) * pageSize,
