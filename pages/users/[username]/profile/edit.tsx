@@ -27,6 +27,10 @@ interface EditMutation {
   ok: boolean;
 }
 
+interface DeleteMutationResponse {
+  ok: boolean;
+}
+
 const EditProfile: NextPage = () => {
   const router = useRouter();
   const { user } = useUser({ isPrivate: true });
@@ -87,6 +91,22 @@ const EditProfile: NextPage = () => {
       router.push("/");
     }
   };
+
+  const [deleteAccount, { data: deleteData, loading: deleteLoading }] =
+    useMutation<DeleteMutationResponse>(`api/user/${user?.username}/delete`);
+
+  const onDelete = () => {
+    window.confirm("Really???");
+    deleteAccount({});
+  };
+
+  useEffect(() => {
+    if (deleteData && deleteData.ok) {
+      router.replace("/");
+    }
+  }, [deleteData, router]);
+
+  console.log(deleteData);
 
   const image = watch("image");
   useEffect(() => {
@@ -248,9 +268,12 @@ const EditProfile: NextPage = () => {
               <EnterButton text="Edit" loading={loading} />
             </form>
           </div>
-          <div className="rounded-lg bg-red-400 w-[20%] transition-all hover:bg-red-600 flex justify-center items-center">
+          <div
+            onClick={() => onDelete()}
+            className="rounded-lg bg-red-400 w-[20%] transition-all hover:bg-red-600 flex justify-center items-center"
+          >
             <button className="p-1 font-bold text-xs text-white ">
-              Delete Account
+              {deleteLoading ? "Loading..." : "Delete Account"}
             </button>
           </div>
         </div>

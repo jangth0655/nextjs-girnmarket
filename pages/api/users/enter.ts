@@ -30,7 +30,7 @@ const handler = async (
               email,
             },
             create: {
-              username,
+              username: username.trim(),
               email,
             },
           },

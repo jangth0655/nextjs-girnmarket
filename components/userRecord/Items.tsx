@@ -1,12 +1,17 @@
 import { cls } from "@libs/client/cls";
-import { Product, User } from "@prisma/client";
+import { deliveryFile } from "@libs/client/deliveryImage";
+import useUser from "@libs/client/useUser";
+import { Photo, Product, User } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import products from "pages/api/products";
 import React from "react";
 import Item from "./Item";
 import { UserWithPost } from "./PostItem";
+import { UserWithProduct } from "./ProductItem";
 
 interface ItemsProps {
-  myProducts?: ProductWithCount[];
+  myProducts?: UserWithProduct;
   myPurchase?: ProductWithUser[];
   mySales?: ProductWithUser[];
   myFav?: ProductWithUser[];
@@ -31,10 +36,15 @@ const Items: React.FC<ItemsProps> = ({
   mySales,
   myFav,
 }) => {
-  //console.log("items", products);
   const router = useRouter();
+  const { user } = useUser({ isPrivate: false });
   const onProductDetail = (name: string) => {
     router.push(`/products/${name}`);
+  };
+
+  const relevantUser = myProducts?.username === user?.username;
+  const editProduct = (productId?: number) => {
+    router.push(`/users/edits/product/${productId}`);
   };
 
   return (
@@ -55,13 +65,32 @@ const Items: React.FC<ItemsProps> = ({
         ))}
 
       {myProducts &&
-        myProducts.map((item) => (
+        myProducts.products.map((item) => (
           <div
-            className="w-[100%] md:h-72 h-96 shadow-md rounded-md flex flex-col justify-center"
+            className="w-[100%] md:h-72 h-96 shadow-md rounded-md flex flex-col justify-center cursor-pointer relative"
             key={item?.name}
           >
+            {relevantUser && (
+              <div
+                onClick={() => editProduct(item?.id)}
+                className="absolute py-1 px-2  rounded-md bg-red-400 hover:bg-red-600 transition-all right-2 top-2 z-10 text-white text-xs"
+              >
+                Edit
+              </div>
+            )}
+
             <div className="relative w-full h-[90%] rounded-t-md">
-              <div className="w-full h-full bg-slate-400 rounded-t-md"></div>
+              {item.photos ? (
+                <Image
+                  src={deliveryFile(item.photos[0]?.url)}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                  className="rounded-t-md"
+                />
+              ) : (
+                <div className="w-full h-full bg-slate-400 rounded-t-md"></div>
+              )}
             </div>
             <div className="flex justify-between items-center  py-2">
               <span

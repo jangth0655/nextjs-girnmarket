@@ -1,4 +1,4 @@
-import { Product, User } from "@prisma/client";
+import { Photo, Product, User } from "@prisma/client";
 import React from "react";
 import useSWR from "swr";
 import Items from "./Items";
@@ -11,9 +11,10 @@ export interface ProductWithCount extends Product {
   _count: {
     favs: number;
   };
+  photos: Photo[];
 }
 
-interface UserWithProduct {
+export interface UserWithProduct {
   products: ProductWithCount[];
   id: number;
   username: string;
@@ -33,7 +34,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ username }) => {
 
   return (
     <div className="w-ful">
-      {loading ? "Loading" : <Items myProducts={data?.products.products} />}
+      {loading ? "Loading" : <Items myProducts={data?.products} />}
     </div>
   );
 };

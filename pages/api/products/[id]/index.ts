@@ -12,6 +12,7 @@ const handler = async (
       query: { id, page = 1 },
       session: { user },
     } = req;
+
     const pageSize = 5;
     const pageNumber = Number(page);
     const product = await client.product.findFirst({
