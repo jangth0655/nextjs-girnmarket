@@ -38,8 +38,8 @@ const Items: React.FC<ItemsProps> = ({
 }) => {
   const router = useRouter();
   const { user } = useUser({ isPrivate: false });
-  const onProductDetail = (name: string) => {
-    router.push(`/products/${name}`);
+  const onProductDetail = (id: number) => {
+    router.push(`/products/${id}`);
   };
 
   const relevantUser = myProducts?.username === user?.username;
@@ -79,7 +79,10 @@ const Items: React.FC<ItemsProps> = ({
               </div>
             )}
 
-            <div className="relative w-full h-[90%] rounded-t-md">
+            <div
+              onClick={() => onProductDetail(item?.id)}
+              className="relative w-full h-[90%] rounded-t-md"
+            >
               {item.photos ? (
                 <Image
                   src={deliveryFile(item.photos[0]?.url)}
@@ -94,7 +97,7 @@ const Items: React.FC<ItemsProps> = ({
             </div>
             <div className="flex justify-between items-center  py-2">
               <span
-                onClick={() => onProductDetail(item?.name)}
+                onClick={() => onProductDetail(item?.id)}
                 className="cursor-pointer hover:font-bold px-2 transition-all"
               >
                 {item?.name}

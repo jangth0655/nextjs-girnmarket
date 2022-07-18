@@ -59,9 +59,9 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
     setHover(false);
   }, []);
 
-  const onProductDetail = (name?: string) => {
-    if (!name) return;
-    router.push(`/products/${name}`);
+  const onProductDetail = (id?: number) => {
+    if (!id) return;
+    router.push(`/products/${id}`);
   };
 
   return (
@@ -104,7 +104,7 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
           ) : null}
 
           <div
-            onClick={() => onProductDetail(data?.product?.name)}
+            onClick={() => onProductDetail(data?.product?.id)}
             className="relative w-full h-full"
           >
             <Image

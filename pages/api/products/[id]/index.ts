@@ -55,12 +55,6 @@ const handler = async (
       return res.status(404).json({ ok: false, error: "상품이 없습니다." });
     }
 
-    const term = product.name.split(" ").map((word) => ({
-      name: {
-        contains: word,
-      },
-    }));
-
     const isLiked = Boolean(
       await client.fav.findFirst({
         where: {
@@ -86,7 +80,22 @@ const handler = async (
       })
     );
 
-    return res.status(200).json({ ok: true, product, isLiked, isLikedProduct });
+    const isPurchaseProduct = Boolean(
+      await client.record.findFirst({
+        where: {
+          userId: user?.id,
+          productId: Number(id),
+          kind: "Purchase",
+        },
+        select: {
+          id: true,
+        },
+      })
+    );
+
+    return res
+      .status(200)
+      .json({ ok: true, product, isLiked, isLikedProduct, isPurchaseProduct });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
