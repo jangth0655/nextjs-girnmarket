@@ -67,7 +67,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET"],
+    method: ["POST"],
     isPrivate: true,
   })
 );

@@ -12,13 +12,13 @@ export interface WithPhotoWithCountWithUser extends Product {
   photos: Photo[];
 }
 
-interface ProductListResponse {
+export interface ProductListResponse {
   ok: boolean;
   products: WithPhotoWithCountWithUser[];
 }
 
 const Home: NextPage = () => {
-  const { data, error } = useSWR<ProductListResponse>("/api/products");
+  const { data, error, mutate } = useSWR<ProductListResponse>("/api/products");
 
   const loading = !data && !error;
 
@@ -28,6 +28,7 @@ const Home: NextPage = () => {
         title="Choose your favorite"
         products={data?.products}
         loading={loading}
+        mutate={mutate}
       />
     </Layout>
   );

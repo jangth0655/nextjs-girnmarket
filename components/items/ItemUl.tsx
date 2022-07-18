@@ -1,6 +1,7 @@
 import PageTitle from "@components/PageTitle";
-import { WithPhotoWithCountWithUser } from "pages";
+import { ProductListResponse, WithPhotoWithCountWithUser } from "pages";
 import React from "react";
+import { KeyedMutator } from "swr";
 import PostLi from "./PostLi";
 import ProductLi from "./ProductLi";
 
@@ -9,6 +10,7 @@ interface ItemUlProps {
   products?: WithPhotoWithCountWithUser[];
   posts?: any;
   loading: boolean;
+  mutate?: KeyedMutator<ProductListResponse>;
 }
 
 const ItemUl: React.FC<ItemUlProps> = ({ title, posts, products, loading }) => {
@@ -17,17 +19,13 @@ const ItemUl: React.FC<ItemUlProps> = ({ title, posts, products, loading }) => {
       <PageTitle title={title} />
       <main className="m-auto mt-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 sm:space-y-0 space-y-8">
-          {loading
-            ? "Loading..."
-            : products &&
-              products.map((product) => (
-                <ProductLi key={product.id} product={product} />
-              ))}
+          {products &&
+            products.map((product) => (
+              <ProductLi key={product.id} productId={product.id} />
+            ))}
 
-          {loading
-            ? "Loading..."
-            : posts &&
-              posts.map((post: any) => <PostLi key={post.id} post={post} />)}
+          {posts &&
+            posts.map((post: any) => <PostLi key={post.id} post={post} />)}
         </div>
       </main>
     </>

@@ -45,7 +45,7 @@ const handler = async (
           id: existFavProduct.id,
         },
       });
-      return res.json({ ok: true });
+      return res.json({ ok: false, comment: "취소되었습니다." });
     } else {
       await client.record.create({
         data: {
@@ -73,7 +73,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET"],
+    method: ["POST"],
     isPrivate: true,
   })
 );

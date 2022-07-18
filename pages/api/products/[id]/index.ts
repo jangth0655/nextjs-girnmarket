@@ -60,17 +60,6 @@ const handler = async (
       },
     }));
 
-    const relatedProduct = await client.product.findMany({
-      where: {
-        OR: term,
-        AND: {
-          id: {
-            not: Number(id),
-          },
-        },
-      },
-    });
-
     const isLiked = Boolean(
       await client.fav.findFirst({
         where: {
@@ -96,9 +85,7 @@ const handler = async (
       })
     );
 
-    return res
-      .status(200)
-      .json({ ok: true, product, relatedProduct, isLiked, isLikedProduct });
+    return res.status(200).json({ ok: true, product, isLiked, isLikedProduct });
   } catch (e) {
     console.log(`${e} Error in handler`);
     return res.status(500).json({ ok: false, error: "Error in handler" });
