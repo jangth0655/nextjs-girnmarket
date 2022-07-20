@@ -2,8 +2,8 @@ import PageTitle from "@components/PageTitle";
 import { ProductListResponse, WithPhotoWithCountWithUser } from "pages";
 import React from "react";
 import { KeyedMutator } from "swr";
-import PostLi from "./PostLi";
-import ProductLi from "./ProductLi";
+import PostLi from "./post/PostLi";
+import ProductLi from "./Product/ProductLi";
 
 interface ItemUlProps {
   title: string;

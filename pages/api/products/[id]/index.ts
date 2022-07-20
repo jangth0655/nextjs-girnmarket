@@ -44,7 +44,6 @@ const handler = async (
           select: {
             review: true,
             id: true,
-            score: true,
           },
           take: pageSize,
           skip: (pageNumber - 1) * pageSize,

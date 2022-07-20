@@ -1,9 +1,12 @@
 import EnterButton from "@components/enter/EnterButton";
+import CreateReview from "@components/items/Product/CreateReview";
+import Reviews from "@components/items/Product/Reviews";
+
 import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
-import { Photo, Product, Review, User } from "@prisma/client";
+import { Photo, Product, User } from "@prisma/client";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -13,7 +16,6 @@ import useSWR from "swr";
 interface ProductWithUserWithPhotoWithCount extends Product {
   user: User;
   photos: Photo[];
-  reviews: Review[];
   _count: {
     favs: number;
     purchases: number;
@@ -33,7 +35,7 @@ const ProductDetail: NextPage = () => {
   const router = useRouter();
   const [hover, setHover] = useState(false);
   const { data, error, mutate } = useSWR<ProductDetailResponse>(
-    `/api/products/${router.query.id}`
+    router.query.id && `/api/products/${router.query.id}`
   );
 
   const [fav, { data: favData, loading: favLoading }] = useMutation(
@@ -70,7 +72,6 @@ const ProductDetail: NextPage = () => {
   };
 
   const onBuy = () => {
-    console.log("buy");
     window.confirm("Do you really want to buy something");
     buy({});
     mutate(
@@ -80,7 +81,7 @@ const ProductDetail: NextPage = () => {
   };
 
   return (
-    <Layout title="">
+    <Layout title={data?.product.name}>
       {loading
         ? "Loading..."
         : router.query.id && (
@@ -90,22 +91,32 @@ const ProductDetail: NextPage = () => {
                 <div className="flex justify-between items-end">
                   <div>
                     <div className="w-10 h-10 rounded-full bg-gray-400 flex justify-center items-center relative">
-                      <svg
-                        className="h-6 w-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
+                      {data?.product.user.avatar ? (
+                        <Image
+                          src={deliveryFile(data?.product.user.avatar)}
+                          layout="fill"
+                          objectFit="cover"
+                          alt=""
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <svg
+                          className="h-6 w-6 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      )}
                     </div>
                     <span className="hover:text-gray-800 hover:font-bold transition-all cursor-pointer">
                       {data?.product?.user?.username}
                     </span>
                   </div>
 
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-2">
                     <div
                       onClick={() => onFavList()}
                       className="p-[2px] text-gray-400 hover:text-red-500 transition-all cursor-pointer"
@@ -127,11 +138,11 @@ const ProductDetail: NextPage = () => {
 
                     <div
                       onClick={() => onFav()}
-                      className="p-[2px] text-gray-400 hover:text-red-500 transition-all cursor-pointer"
+                      className="p-[2px] text-gray-400 hover:text-red-500 transition-all cursor-pointer flex"
                     >
                       <svg
                         className={cls(
-                          "h-6 w-6 ",
+                          "h-6 w-6 mr-1",
                           data?.isLiked ? "text-red-500" : ""
                         )}
                         viewBox="0 0 20 20"
@@ -142,6 +153,13 @@ const ProductDetail: NextPage = () => {
                           clipRule="evenodd"
                         />
                       </svg>
+                      <div>
+                        <span className="text-sm">
+                          {data?.product?._count?.favs
+                            ? data?.product?._count?.favs
+                            : 0}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -215,31 +233,22 @@ const ProductDetail: NextPage = () => {
               </div>
 
               {/* reivew & input */}
-              <div className="mt-10 space-y-2">
-                <h1 className="font-bold text-lg">Reviews</h1>
+              <div className="mt-20 space-y-6">
+                <div className="flex items-center space-x-3">
+                  <h1 className="font-bold text-lg">Reviews</h1>
+                  <span>
+                    (
+                    {data?.product._count.reviews
+                      ? data?.product._count.reviews
+                      : 0}
+                    )
+                  </span>
+                </div>
                 <div>
-                  <div className="h-96"></div>
-                  <form className="">
-                    <div className="relative flex items-center h-8 space-x-1 w-[80%]">
-                      <input
-                        id="review"
-                        type="text"
-                        placeholder="Review..."
-                        className="pl-3 pr-14 py-3 w-full rounded-lg bg-gray-100 "
-                      />
-                      <button className="bg-pink-200  h-full rounded-full right-3 px-2 hover:bg-pink-500 hover:text-white transition-all  cursor-pointer text-pink-500 absolute flex items-center justify-center">
-                        <svg
-                          className="h-5 w-5 rotate-90"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
-                      </button>
-                    </div>
-                  </form>
+                  <Reviews id={Number(router.query.id)} />
+                </div>
+                <div>
+                  <CreateReview id={Number(router.query.id)} />
                 </div>
               </div>
             </div>
