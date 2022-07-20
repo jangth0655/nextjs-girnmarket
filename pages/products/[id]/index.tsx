@@ -1,4 +1,3 @@
-import EnterButton from "@components/enter/EnterButton";
 import CreateReview from "@components/items/Product/CreateReview";
 import Reviews from "@components/items/Product/Reviews";
 
@@ -81,7 +80,7 @@ const ProductDetail: NextPage = () => {
   };
 
   return (
-    <Layout title={data?.product.name}>
+    <Layout title={data?.product?.name} head="Detail">
       {loading
         ? "Loading..."
         : router.query.id && (
@@ -91,9 +90,9 @@ const ProductDetail: NextPage = () => {
                 <div className="flex justify-between items-end">
                   <div>
                     <div className="w-10 h-10 rounded-full bg-gray-400 flex justify-center items-center relative">
-                      {data?.product.user.avatar ? (
+                      {data?.product?.user?.avatar ? (
                         <Image
-                          src={deliveryFile(data?.product.user.avatar)}
+                          src={deliveryFile(data?.product?.user?.avatar)}
                           layout="fill"
                           objectFit="cover"
                           alt=""
@@ -238,8 +237,8 @@ const ProductDetail: NextPage = () => {
                   <h1 className="font-bold text-lg">Reviews</h1>
                   <span>
                     (
-                    {data?.product._count.reviews
-                      ? data?.product._count.reviews
+                    {data?.product?._count?.reviews
+                      ? data?.product?._count?.reviews
                       : 0}
                     )
                   </span>

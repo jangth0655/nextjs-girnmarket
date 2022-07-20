@@ -1,5 +1,7 @@
 import ErrorMessage from "@components/enter/ErrorMessage";
 import useMutation from "@libs/client/mutation";
+import useUser from "@libs/client/useUser";
+import { Review } from "@prisma/client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
@@ -14,6 +16,7 @@ interface ReviewForm {
 
 interface CreateReviewMutation {
   ok: boolean;
+  reivew: Review;
 }
 
 const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
@@ -23,7 +26,7 @@ const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
     reset,
     formState: { errors },
   } = useForm<ReviewForm>();
-
+  const { user } = useUser({ isPrivate: false });
   const { mutate } = useSWRConfig();
 
   const [createReview, { data, loading }] = useMutation<CreateReviewMutation>(
@@ -37,10 +40,9 @@ const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
   };
 
   useEffect(() => {
-    if (data && id && data.ok) {
-      mutate(`/api/products/${id}`);
+    if (data && data.ok) {
     }
-  }, [data, id, mutate]);
+  }, [data, id, mutate, user]);
 
   return (
     <div>

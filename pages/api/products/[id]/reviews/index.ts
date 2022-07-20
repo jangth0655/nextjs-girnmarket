@@ -71,7 +71,7 @@ const handler = async (
           review,
         },
       });
-      return res.status(201).json({ ok: true });
+      return res.status(201).json({ ok: true, review: newReview });
     }
   } catch (e) {
     console.log(`${e} Error in handler`);

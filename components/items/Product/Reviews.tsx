@@ -21,14 +21,17 @@ interface ReviewPorps {
 const Reviews: React.FC<ReviewPorps> = ({ id }) => {
   const [page, setPage] = useState(1);
   const { data } = useSWR<ReviewResponse>(
-    id ? `/api/products/${id}/reviews?page=${page}` : ""
+    id ? `/api/products/${id}/reviews?page=${page}` : null,
+    {
+      refreshInterval: 1000,
+    }
   );
 
   const totalReviews = data?.productReviews?.reviews
     ? data?.productReviews?.reviews.length
     : 0;
 
-  const maxReivew = 9;
+  const maxReivew = 10;
   const onNext = () => {
     setPage((prev) => (totalReviews < maxReivew ? 1 : page + 1));
   };
