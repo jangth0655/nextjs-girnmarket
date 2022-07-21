@@ -13,6 +13,7 @@ const handler = async (
       session: { user },
       query: { id, page = 1 },
     } = req;
+
     const pageSize = 5;
     const pageNumber = Number(page);
     if (req.method === "GET") {

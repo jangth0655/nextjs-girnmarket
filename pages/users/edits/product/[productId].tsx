@@ -3,7 +3,6 @@ import Input from "@components/Input";
 import Layout from "@components/Layout";
 import PageTitle from "@components/PageTitle";
 import TextArea from "@components/TextArea";
-import UploadImage from "@components/UploadImage";
 import { deleteImage } from "@libs/client/deleteImage";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
@@ -95,8 +94,6 @@ const EditProduct: NextPage = () => {
       router.push(`/users/${data?.product.user.username}/profile`);
     }
   }, [removeData, router, data?.product?.user?.username]);
-
-  console.log(removeData);
 
   const onValid = async (formData: EditProductForm) => {
     if (editLoading) return;

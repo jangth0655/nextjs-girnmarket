@@ -1,46 +1,40 @@
 import ErrorMessage from "@components/enter/ErrorMessage";
 import useMutation from "@libs/client/mutation";
-import { Review } from "@prisma/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-interface ProductReviewProps {
-  id?: number;
+interface CreateCommentProps {
+  id: number;
 }
 
-interface ReviewForm {
-  review: string;
+interface CreateForm {
+  answer?: string;
 }
 
-interface CreateReviewMutation {
-  ok: boolean;
-  reivew: Review;
-}
-
-const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
+const CreateComment: React.FC<CreateCommentProps> = ({ id }) => {
   const {
-    register,
     handleSubmit,
+    register,
     reset,
     formState: { errors },
-  } = useForm<ReviewForm>();
+  } = useForm<CreateForm>();
 
-  const [createReview, { data, loading }] = useMutation<CreateReviewMutation>(
-    id ? `/api/products/${id}/reviews` : ""
-  );
+  const [
+    createComment,
+    { loading: createCommentLoading, data: createCommentData },
+  ] = useMutation(`/api/posts/${id}/comments`);
 
-  const onValid = (data: ReviewForm) => {
-    if (loading) return;
-    createReview(data);
+  const onValid = (formData: CreateForm) => {
+    if (createCommentLoading) return;
+    createComment(formData);
     reset();
   };
-
   return (
     <div>
       <form onSubmit={handleSubmit(onValid)}>
         <div className="relative flex items-center h-8 space-x-1 w-[90%]">
           <input
-            {...register("review", {
+            {...register("answer", {
               required: "Required.",
               minLength: {
                 value: 2,
@@ -53,7 +47,7 @@ const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
             className="pl-3 pr-14 py-3 w-full rounded-lg bg-gray-100 "
           />
           <button className="bg-pink-200  h-full rounded-full right-3 px-2 hover:bg-pink-500 hover:text-white transition-all  cursor-pointer text-pink-500 absolute flex items-center justify-center">
-            {loading ? (
+            {createCommentLoading ? (
               "Loading..."
             ) : (
               <svg
@@ -69,10 +63,10 @@ const CreateReview: React.FC<ProductReviewProps> = ({ id }) => {
           </button>
         </div>
       </form>
-      {errors.review?.message && (
-        <ErrorMessage errorText={errors.review.message} />
+      {errors.answer?.message && (
+        <ErrorMessage errorText={errors.answer.message} />
       )}
     </div>
   );
 };
-export default CreateReview;
+export default CreateComment;

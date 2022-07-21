@@ -2,35 +2,41 @@ import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
-import React from "react";
-import { ReviewWithUser } from "./Reviews";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { CommentWithUser } from "./CommentsItems";
 
-interface ReviewProps {
-  review: ReviewWithUser;
-  productId: number;
+interface CommentItemProps {
+  comment: CommentWithUser;
+  postId: number;
 }
 
-const ReviewItem: React.FC<ReviewProps> = ({ review, productId }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, postId }) => {
+  const router = useRouter();
   const { user } = useUser({ isPrivate: false });
-  const [deleteReview, { data: deleteData }] = useMutation(
-    review.id && productId ? `/api/products/${productId}/reviews/remove` : ""
-  );
+  const confirmUser = comment.user.id === user?.id;
+  const [deletePost, { loading: deletePostLoading, data: deletePostData }] =
+    useMutation(postId ? `/api/posts/${postId}/comments/remove` : "");
 
-  const confirmUser = review.user.id === user?.id;
-
-  const onDeleteReview = () => {
-    if (deleteData) return;
-    deleteReview({ reviewId: review.id });
+  const onDeletePost = () => {
+    if (deletePostLoading) return;
+    deletePost({ commentId: comment.id });
   };
 
+  /* useEffect(() => {
+    if(deletePostData && deletePostData.ok){ 
+      router.push(`/community`)
+    }
+  },[]) */
+
   return (
-    <div className="items-center  mb-8">
+    <div className="items-center mb-8">
       <div className="flex w-full items-center justify-between">
-        <div className="flex justify-center items-center">
+        <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-gray-400 flex justify-center items-center relative mr-1">
-            {review.user.avatar ? (
+            {comment?.user.avatar ? (
               <Image
-                src={deliveryFile(review.user.avatar)}
+                src={deliveryFile(comment?.user.avatar)}
                 layout="fill"
                 objectFit="cover"
                 alt=""
@@ -48,13 +54,13 @@ const ReviewItem: React.FC<ReviewProps> = ({ review, productId }) => {
               </svg>
             )}
           </div>
-          <span className="text-sm">{review.user.username}</span>
+          <span className="text-sm">{comment.user.username}</span>
         </div>
 
         {confirmUser && (
           <div>
             <svg
-              onClick={() => onDeleteReview()}
+              onClick={() => onDeletePost()}
               className="h-5 w-5 text-red-300 hover:text-red-500 transition-all cursor-pointer"
               viewBox="0 0 20 20"
               fill="currentColor"
@@ -68,10 +74,12 @@ const ReviewItem: React.FC<ReviewProps> = ({ review, productId }) => {
           </div>
         )}
       </div>
+
       <div className="ml-10 mt-1">
-        <span>{review.review}</span>
+        <span>{comment?.answer}</span>
       </div>
     </div>
   );
 };
-export default ReviewItem;
+
+export default CommentItem;

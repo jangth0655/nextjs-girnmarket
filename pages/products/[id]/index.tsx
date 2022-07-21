@@ -80,7 +80,7 @@ const ProductDetail: NextPage = () => {
   };
 
   return (
-    <Layout title={data?.product?.name} head="Detail">
+    <Layout title={data?.product?.name} head="Product">
       {loading
         ? "Loading..."
         : router.query.id && (

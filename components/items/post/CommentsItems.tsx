@@ -1,34 +1,35 @@
-import { Review, User } from "@prisma/client";
-import React, { useRef, useState } from "react";
+import { Comment, User } from "@prisma/client";
+import React, { useState } from "react";
 import useSWR from "swr";
-import ReviewItem from "./ReviewItem";
+import CommentItem from "./CommentItem";
 
-export interface ReviewWithUser extends Review {
-  user: User;
-}
-
-interface ReviewResponse {
-  ok: boolean;
-  productReviews: {
-    reviews: ReviewWithUser[];
-  };
-}
-
-interface ReviewPorps {
+interface CommentsProps {
   id: number;
 }
 
-const Reviews: React.FC<ReviewPorps> = ({ id }) => {
-  const [page, setPage] = useState(1);
-  const { data } = useSWR<ReviewResponse>(
-    id ? `/api/products/${id}/reviews?page=${page}` : null,
+export interface CommentWithUser extends Comment {
+  user: User;
+}
+
+interface CommentsResponse {
+  ok: boolean;
+  postComments: {
+    comments: CommentWithUser[];
+  };
+}
+
+const CommentsItems: React.FC<CommentsProps> = ({ id }) => {
+  const { data, error } = useSWR<CommentsResponse>(
+    id ? `/api/posts/${id}/comments` : null,
     {
       refreshInterval: 1000,
     }
   );
 
-  const totalReviews = data?.productReviews?.reviews
-    ? data?.productReviews?.reviews.length
+  const [page, setPage] = useState(1);
+
+  const totalReviews = data?.postComments?.comments
+    ? data?.postComments?.comments.length
     : 0;
 
   const maxReivew = 10;
@@ -42,10 +43,10 @@ const Reviews: React.FC<ReviewPorps> = ({ id }) => {
 
   return (
     <div>
-      {data?.productReviews?.reviews.map((review) => (
-        <ReviewItem key={review.id} review={review} productId={id} />
+      {data?.postComments?.comments.map((comment) => (
+        <CommentItem key={comment.id} comment={comment} postId={id} />
       ))}
-      {data?.productReviews.reviews.length === 0 ? null : (
+      {data?.postComments?.comments.length === 0 ? null : (
         <div className="my-4 flex justify-center space-x-5 text-gray-400 ">
           <div onClick={() => onBack()} className="">
             <svg
@@ -74,4 +75,4 @@ const Reviews: React.FC<ReviewPorps> = ({ id }) => {
     </div>
   );
 };
-export default Reviews;
+export default CommentsItems;

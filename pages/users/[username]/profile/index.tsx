@@ -15,10 +15,10 @@ import { deliveryFile } from "@libs/client/deliveryImage";
 const profileRecord = [
   { name: "Product", id: "product", isPrivate: false },
   { name: "Post", id: "post", isPrivate: false },
+  { name: "About", id: "about", isPrivate: false },
   { name: "Like", id: "favList", isPrivate: true },
   { name: "Purchases", id: "purchase", isPrivate: true },
   { name: "Sales", id: "sale", isPrivate: true },
-  { name: "About", id: "about", isPrivate: false },
 ];
 
 export type MarkType =
@@ -129,15 +129,15 @@ const Profile: NextPage = () => {
                 <span className="text-gray-400 hover:text-gray-800 cursor-pointer ">
                   {item.name}
                 </span>
+              ) : !item.isPrivate ? (
+                <span
+                  className="text-gray-400 hover:text-gray-800 cursor-pointer"
+                  key={item.id}
+                >
+                  {item.name}
+                </span>
               ) : (
-                !item.isPrivate && (
-                  <span
-                    className="text-gray-400 hover:text-gray-800 cursor-pointer "
-                    key={item.id}
-                  >
-                    {item.name}
-                  </span>
-                )
+                <span className="hidden"></span>
               )}
               {mark === item.id && (
                 <motion.div

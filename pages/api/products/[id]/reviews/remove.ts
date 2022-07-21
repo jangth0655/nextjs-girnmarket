@@ -10,7 +10,8 @@ const handler = async (
   try {
     const {
       session: { user },
-      query: { id, reviewId },
+      query: { id },
+      body: { reviewId },
     } = req;
 
     const existProduct = await client.product.findFirst({
@@ -56,7 +57,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET"],
+    method: ["POST"],
     isPrivate: true,
   })
 );
