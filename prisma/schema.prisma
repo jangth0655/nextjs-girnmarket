@@ -76,7 +76,6 @@ model Review {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   review String @db.MediumText
-  score Int @default(1)
 }
 
 model Fav { 
@@ -117,7 +116,7 @@ model Post {
   userId Int
   question String @db.MediumText 
   comments Comment[]
-  likeComments LikeComment[]
+  likePost LikeComment[]
   image String?
 }
 

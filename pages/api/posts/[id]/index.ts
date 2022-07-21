@@ -47,7 +47,7 @@ const handler = async (
           _count: {
             select: {
               comments: true,
-              likeComments: true,
+              likePost: true,
             },
           },
         },
@@ -58,7 +58,7 @@ const handler = async (
           .json({ ok: false, error: "Could not found post" });
       }
 
-      const isLikeComment = Boolean(
+      const isLikePost = Boolean(
         await client.likeComment.findFirst({
           where: {
             postId: post.id,
@@ -71,7 +71,7 @@ const handler = async (
       );
 
       const isMine = post.userId === user?.id;
-      return res.status(200).json({ ok: true, post, isMine, isLikeComment });
+      return res.status(200).json({ ok: true, post, isMine, isLikePost });
     }
 
     if (req.method === "POST") {

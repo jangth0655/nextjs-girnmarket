@@ -1,4 +1,4 @@
-import ItemUl from "@components/items/ItemUl";
+import ProductUl from "@components/items/Product/ProductUl";
 import Layout from "@components/Layout";
 import { Photo, Product, User } from "@prisma/client";
 import type { NextPage } from "next";
@@ -19,12 +19,11 @@ export interface ProductListResponse {
 
 const Home: NextPage = () => {
   const { data, error, mutate } = useSWR<ProductListResponse>("/api/products");
-
   const loading = !data && !error;
 
   return (
     <Layout>
-      <ItemUl
+      <ProductUl
         title="Choose your favorite"
         products={data?.products}
         loading={loading}

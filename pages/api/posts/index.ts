@@ -14,7 +14,7 @@ const handler = async (
       query: { page = 1 },
     } = req;
 
-    const pageSize = 5;
+    const pageSize = 10;
     const pageNumber = Number(page);
     if (req.method === "GET") {
       const posts = await client.post.findMany({
@@ -29,7 +29,7 @@ const handler = async (
           _count: {
             select: {
               comments: true,
-              likeComments: true,
+              likePost: true,
             },
           },
         },

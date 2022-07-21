@@ -1,19 +1,19 @@
 import PageTitle from "@components/PageTitle";
 import { ProductListResponse, WithPhotoWithCountWithUser } from "pages";
+import { PostWithUserWithCount } from "pages/community";
 import React from "react";
 import { KeyedMutator } from "swr";
-import PostLi from "./post/PostLi";
-import ProductLi from "./Product/ProductLi";
+import PostLi from "../post/PostLi";
+import ProductLi from "./ProductLi";
 
 interface ItemUlProps {
   title: string;
   products?: WithPhotoWithCountWithUser[];
-  posts?: any;
   loading: boolean;
   mutate?: KeyedMutator<ProductListResponse>;
 }
 
-const ItemUl: React.FC<ItemUlProps> = ({ title, posts, products, loading }) => {
+const ProductUl: React.FC<ItemUlProps> = ({ title, products, loading }) => {
   return (
     <>
       <PageTitle title={title} />
@@ -23,12 +23,9 @@ const ItemUl: React.FC<ItemUlProps> = ({ title, posts, products, loading }) => {
             products.map((product) => (
               <ProductLi key={product.id} productId={product.id} />
             ))}
-
-          {posts &&
-            posts.map((post: any) => <PostLi key={post.id} post={post} />)}
         </div>
       </main>
     </>
   );
 };
-export default ItemUl;
+export default ProductUl;

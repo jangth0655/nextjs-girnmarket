@@ -235,13 +235,6 @@ const ProductDetail: NextPage = () => {
               <div className="mt-20 space-y-6">
                 <div className="flex items-center space-x-3">
                   <h1 className="font-bold text-lg">Reviews</h1>
-                  <span>
-                    (
-                    {data?.product?._count?.reviews
-                      ? data?.product?._count?.reviews
-                      : 0}
-                    )
-                  </span>
                 </div>
                 <div>
                   <Reviews id={Number(router.query.id)} />

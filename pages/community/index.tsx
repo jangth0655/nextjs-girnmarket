@@ -1,13 +1,34 @@
+import PostUl from "@components/items/post/PostUl";
 import Layout from "@components/Layout";
+import { Post, User } from "@prisma/client";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import useSWR from "swr";
+
+export interface PostWithUserWithCount extends Post {
+  _count: {
+    comments: number;
+    likePost: number;
+  };
+  user: User;
+}
+
+interface PostResponse {
+  ok: boolean;
+  posts: PostWithUserWithCount[];
+}
 
 const Community: NextPage = () => {
-  const router = useRouter();
+  const { data, error } = useSWR<PostResponse>("/api/posts");
+
+  const loading = !data && !error;
 
   return (
     <Layout>
-      <h1>Community</h1>
+      <PostUl
+        loading={loading}
+        posts={data?.posts}
+        title="Welcome to Community"
+      />
     </Layout>
   );
 };

@@ -29,7 +29,9 @@ const handler = async (
           id: existPost.id,
         },
       });
+      return res.json({ ok: true });
     }
+
     await client.likeComment.create({
       data: {
         user: {
@@ -54,7 +56,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET", "POST"],
+    method: ["POST"],
     isPrivate: true,
   })
 );
