@@ -77,6 +77,10 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
     router.push(`/products/${id}`);
   };
 
+  const onUserProfile = (username?: string) => {
+    router.push(`/users/${username}/profile`);
+  };
+
   return (
     <>
       <div
@@ -129,7 +133,10 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
 
         <div className="flex justify-between items-center py-1">
           <div className="flex items-center ">
-            <div className="relative w-6 h-6 rounded-full mr-2">
+            <div
+              onClick={() => onUserProfile(data?.product?.user?.username)}
+              className="relative w-6 h-6 rounded-full mr-2"
+            >
               {data?.product?.user.avatar ? (
                 <Image
                   src={deliveryFile(data.product?.user?.avatar)}
@@ -152,7 +159,7 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
                 </div>
               )}
             </div>
-            <div>
+            <div onClick={() => onUserProfile(data?.product?.user?.username)}>
               <span>{data?.product?.user.username}</span>
             </div>
           </div>

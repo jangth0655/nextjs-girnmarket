@@ -106,8 +106,6 @@ const EditProfile: NextPage = () => {
     }
   }, [deleteData, router]);
 
-  console.log(deleteData);
-
   const image = watch("image");
   useEffect(() => {
     if (image && image.length > 0) {

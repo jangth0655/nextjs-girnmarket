@@ -9,8 +9,9 @@ const handler = async (
 ) => {
   try {
     const {
-      query: { username },
+      query: { username, page = 1 },
     } = req;
+
     const existUser = await client.user.findUnique({
       where: {
         username: username + "",
@@ -25,6 +26,7 @@ const handler = async (
         .json({ ok: false, error: "Could not found user." });
     }
 
+    const pageSize = 10;
     const products = await client.user.findFirst({
       where: {
         username: username + "",
@@ -43,6 +45,8 @@ const handler = async (
             name: true,
             photos: true,
           },
+          take: pageSize,
+          skip: (+page - 1) * pageSize,
         },
       },
     });

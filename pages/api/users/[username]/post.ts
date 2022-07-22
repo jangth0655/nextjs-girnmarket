@@ -9,7 +9,7 @@ const handler = async (
 ) => {
   try {
     const {
-      query: { username },
+      query: { username, page = 1 },
     } = req;
     const existUser = await client.user.findUnique({
       where: {
@@ -25,6 +25,7 @@ const handler = async (
         .json({ ok: false, error: "Could not found user." });
     }
 
+    const pageSize = 10;
     const posts = await client.user.findFirst({
       where: {
         username: username + "",
@@ -36,11 +37,13 @@ const handler = async (
         posts: {
           select: {
             _count: true,
-            likeComments: true,
+            likePost: true,
             id: true,
             question: true,
             image: true,
           },
+          take: pageSize,
+          skip: (+page - 1) * pageSize,
         },
       },
     });

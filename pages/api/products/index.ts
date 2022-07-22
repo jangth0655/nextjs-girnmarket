@@ -13,7 +13,7 @@ const handler = async (
         query: { page = 1 },
       } = req;
 
-      const pageSize = 5;
+      const pageSize = 10;
       const pageNumber = Number(page);
 
       const products = await client.product.findMany({

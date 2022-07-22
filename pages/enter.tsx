@@ -185,6 +185,10 @@ const Enter: NextPage = () => {
                     <EnterInput
                       register={register("username", {
                         required: "Username is required.",
+                        validate: {
+                          trimUser: (value) =>
+                            value.trim() || "Fill in the blanks",
+                        },
                       })}
                       placeholder="Username"
                       text="Username"

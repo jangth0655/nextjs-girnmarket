@@ -14,7 +14,7 @@ const PostUl: React.FC<PostUlProps> = ({ title, posts, loading }) => {
   return (
     <div>
       <PageTitle title={title} />
-      <main className="mt-16 m-auto min-h-screen">
+      <main className="mt-16 m-auto">
         {loading ? (
           "Loading..."
         ) : (

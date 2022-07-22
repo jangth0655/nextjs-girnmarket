@@ -1,10 +1,9 @@
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useUser from "@libs/client/useUser";
-import { Photo, Product, User } from "@prisma/client";
+import { Product, User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import products from "pages/api/products";
 import React from "react";
 import Item from "./Item";
 import { UserWithPost } from "./PostItem";

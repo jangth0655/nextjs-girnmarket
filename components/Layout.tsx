@@ -242,7 +242,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
           ) : (
             <>
               <div className="flex items-center space-x-6 relative">
-                <div className="relative w-20 h-20 mr-8">
+                <div className="relative w-16 h-16 mr-8">
                   <Image
                     onClick={() => onHome()}
                     src={logo}
