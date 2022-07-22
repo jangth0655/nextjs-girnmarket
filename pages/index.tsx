@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   const loading = !data && !error;
 
   return (
-    <Layout>
+    <Layout head="Main">
       {loading ? (
         "loading.."
       ) : (
@@ -74,8 +74,6 @@ const Page: NextPage<{ products: WithPhotoWithCountWithUser[] }> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  /* const pageSize = 10;
-  const pageNumber = Number(page); */
   const products = await client.product.findMany({
     include: {
       user: {
@@ -97,8 +95,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
         },
       },
     },
-    /*  take: pageSize,
-    skip: (pageNumber - 1) * pageSize, */
   });
   return {
     props: {
