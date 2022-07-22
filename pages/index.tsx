@@ -1,10 +1,11 @@
 import Pagination from "@components/items/Pagination";
 import ProductUl from "@components/items/Product/ProductUl";
 import Layout from "@components/Layout";
+import client from "@libs/server/client";
 import { Photo, Product, User } from "@prisma/client";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 
 export interface WithPhotoWithCountWithUser extends Product {
   _count: {
@@ -28,23 +29,82 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <div className="">
-        <ProductUl
-          title="Choose your favorite"
-          products={data?.products}
-          loading={loading}
-          mutate={mutate}
-        />
-      </div>
-      <div className="mt-32">
-        <Pagination
-          count={data?.products?.length}
-          page={page}
-          setPage={setPage}
-        />
-      </div>
+      {loading ? (
+        "loading.."
+      ) : (
+        <>
+          <div className="">
+            <ProductUl
+              title="Choose your favorite"
+              products={data?.products}
+              loading={loading}
+              mutate={mutate}
+            />
+          </div>
+          <div className="mt-32">
+            <Pagination
+              count={data?.products?.length}
+              page={page}
+              setPage={setPage}
+            />
+          </div>
+        </>
+      )}
     </Layout>
   );
 };
 
-export default Home;
+const Page: NextPage<{ products: WithPhotoWithCountWithUser[] }> = ({
+  products,
+}) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/products": {
+            ok: true,
+            products,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  /* const pageSize = 10;
+  const pageNumber = Number(page); */
+  const products = await client.product.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+        },
+      },
+      _count: {
+        select: {
+          favs: true,
+        },
+      },
+      photos: {
+        select: {
+          url: true,
+          id: true,
+        },
+      },
+    },
+    /*  take: pageSize,
+    skip: (pageNumber - 1) * pageSize, */
+  });
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
+};
+
+export default Page;

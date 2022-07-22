@@ -27,6 +27,7 @@ const handler = async (
         email: true,
         bio: true,
         website: true,
+        createdAt: true,
       },
     });
 

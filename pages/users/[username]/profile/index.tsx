@@ -1,16 +1,18 @@
 import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import useUser from "@libs/client/useUser";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage, NextPageContext } from "next";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Record from "@components/userRecord/Record";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import { User } from "@prisma/client";
 import { dateFormate } from "@libs/client/dateFormat";
 import Image from "next/image";
 import { deliveryFile } from "@libs/client/deliveryImage";
+import { withSsrSession } from "@libs/server/withSession";
+import client from "@libs/server/client";
 
 const profileRecord = [
   { name: "Product", id: "product", isPrivate: false },
@@ -97,7 +99,7 @@ const Profile: NextPage = () => {
           ) : (
             <div className="flex flex-col justify-center items-center">
               <span className="font-bold text-2xl mb-2">
-                {data?.userProfile.username}
+                {data?.userProfile?.username}
               </span>
               <span>{dateFormate(data?.userProfile?.createdAt)}</span>
             </div>
@@ -156,7 +158,7 @@ const Profile: NextPage = () => {
 
       <div className="mt-4 mb-10 w-full h-[1px] bg-gray-300" />
       <section className="w-ful">
-        {data?.userProfile.username && (
+        {data?.userProfile?.username && (
           <Record mark={mark} username={data?.userProfile.username} />
         )}
       </section>
@@ -164,4 +166,45 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+const Page: NextPage<{ existUser: User }> = ({ existUser }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/users/me": {
+            ok: true,
+            user: existUser,
+          },
+        },
+      }}
+    >
+      <Profile />
+    </SWRConfig>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = withSsrSession(
+  async ({ req }: NextPageContext) => {
+    const userProfile = await client.user.findUnique({
+      where: {
+        id: req?.session.user?.id,
+      },
+      select: {
+        username: true,
+        id: true,
+        avatar: true,
+        email: true,
+        createdAt: true,
+        bio: true,
+        website: true,
+      },
+    });
+    return {
+      props: {
+        userProfile: JSON.parse(JSON.stringify(userProfile)),
+      },
+    };
+  }
+);
+
+export default Page;

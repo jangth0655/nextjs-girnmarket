@@ -10,10 +10,11 @@ const handler = async (
   try {
     const {
       query: { username },
+      session: { user },
     } = req;
     const existUser = await client.user.findUnique({
       where: {
-        username: username + "",
+        ...(username ? { username: username + "" } : { id: user?.id }),
       },
       select: {
         username: true,

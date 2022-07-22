@@ -2,9 +2,10 @@ import Pagination from "@components/items/Pagination";
 import PostUl from "@components/items/post/PostUl";
 import Layout from "@components/Layout";
 import { Post, User } from "@prisma/client";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
+import client from "@libs/server/client";
 
 export interface PostWithUserWithCount extends Post {
   _count: {
@@ -39,4 +40,49 @@ const Community: NextPage = () => {
   );
 };
 
-export default Community;
+const Page: NextPage<{ posts: PostWithUserWithCount[] }> = ({ posts }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/posts": {
+            ok: true,
+            posts,
+          },
+        },
+      }}
+    >
+      <Community />
+    </SWRConfig>
+  );
+};
+
+const getServerSideProps: GetServerSideProps = async () => {
+  const posts = await client.post.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          avatar: true,
+          username: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+          likePost: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return {
+    props: {
+      posts: JSON.parse(JSON.stringify(posts)),
+    },
+  };
+};
+
+export default Page;
