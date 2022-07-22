@@ -20,6 +20,7 @@ interface LayoutProps {
   children: React.ReactNode;
   head?: string;
   title?: string;
+  showingSearchIcon?: boolean;
 }
 
 const navItem = [
@@ -38,7 +39,12 @@ const scrollVariant: Variants = {
   },
 };
 
-const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  head,
+  title,
+  showingSearchIcon = true,
+}) => {
   const router = useRouter();
   const [windowSize, setWindowSize] = useState(0);
   const [activeNav, setActiveNav] = useState(false);
@@ -148,7 +154,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
   return (
     <section>
       <Head>
-        <title>{head}</title>
+        <title>{`${head} | grin`}</title>
       </Head>
       <div ref={navRef} className="p-4  mb-2">
         <nav className="fixed top-0 p-2 w-full right-0 flex justify-between items-center  bg-white border-b-2 z-20 border-gray-50 shadow-sm">
@@ -187,8 +193,7 @@ const Layout: React.FC<LayoutProps> = ({ children, head, title }) => {
               <NavTitle title={title} />
 
               <div className="flex items-center space-x-4">
-                <SearchIcon />
-
+                {showingSearchIcon ? <SearchIcon /> : null}
                 {user?.id ? (
                   <div
                     onClick={() => setProfileNav((prev) => !prev)}

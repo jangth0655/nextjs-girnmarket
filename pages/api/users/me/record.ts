@@ -30,6 +30,12 @@ const handler = async (
           },
           product: {
             include: {
+              photos: {
+                select: {
+                  url: true,
+                  id: true,
+                },
+              },
               _count: {
                 select: {
                   favs: true,
@@ -58,6 +64,12 @@ const handler = async (
           },
           product: {
             include: {
+              photos: {
+                select: {
+                  url: true,
+                  id: true,
+                },
+              },
               _count: {
                 select: {
                   favs: true,
@@ -86,6 +98,12 @@ const handler = async (
           },
           product: {
             include: {
+              photos: {
+                select: {
+                  url: true,
+                  id: true,
+                },
+              },
               _count: {
                 select: {
                   favs: true,

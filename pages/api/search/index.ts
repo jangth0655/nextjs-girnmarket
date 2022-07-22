@@ -9,17 +9,19 @@ const handler = async (
 ) => {
   try {
     const {
-      body: { name },
-      query: { page = 1 },
+      query: { page = 1, keyword },
     } = req;
-    const pageSize = 5;
+    const pageSize = 10;
     const pageNumber = Number(page);
-    const term = name
-      ? name?.split(" ").map((word?: string) => ({
-          name: {
-            startsWith: word,
-          },
-        }))
+
+    const term = keyword
+      ? String(keyword)
+          ?.split(" ")
+          .map((word?: string) => ({
+            name: {
+              startsWith: word,
+            },
+          }))
       : [];
 
     const products = await client.product.findMany({
@@ -60,7 +62,7 @@ const handler = async (
 export default withSessionAPI(
   withHandler({
     handler,
-    method: ["GET", "POST"],
+    method: ["GET"],
     isPrivate: true,
   })
 );

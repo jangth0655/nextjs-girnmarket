@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 
 const searchVariant: Variants = {
   initial: {
@@ -16,12 +17,36 @@ interface SearchForm {
 }
 
 const SearchIcon: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<SearchForm>();
+  const router = useRouter();
   const [showingSearch, setShowingSearch] = useState(false);
+  const { register, handleSubmit, reset } = useForm<SearchForm>();
+  const [keyword, setKeyword] = useState("");
+
+  const onValid = (formData: SearchForm) => {
+    setKeyword(formData.keyword);
+    reset();
+  };
+
+  useEffect(() => {
+    if (keyword) {
+      router.push({
+        pathname: `/products/search`,
+        query: {
+          keyword,
+        },
+      });
+    }
+  }, [keyword, router]);
   return (
-    <form className="flex items-center relative">
+    <form
+      onSubmit={handleSubmit(onValid)}
+      className="flex items-center relative"
+    >
       {showingSearch ? (
         <motion.input
+          {...register("keyword", {
+            required: true,
+          })}
           variants={searchVariant}
           initial="initial"
           animate="animate"

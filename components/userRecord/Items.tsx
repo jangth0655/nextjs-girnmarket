@@ -1,7 +1,7 @@
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useUser from "@libs/client/useUser";
-import { Product, User } from "@prisma/client";
+import { Photo, Product, User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -18,14 +18,15 @@ interface ItemsProps {
 }
 
 interface ProductWithUser {
-  product: ProductWithCount;
+  product: ProductWithCountWithPhoto;
   user: User;
 }
 
-interface ProductWithCount extends Product {
+interface ProductWithCountWithPhoto extends Product {
   _count: {
     favs: number;
   };
+  photos: Photo[];
 }
 
 const Items: React.FC<ItemsProps> = ({

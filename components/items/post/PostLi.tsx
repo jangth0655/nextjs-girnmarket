@@ -4,7 +4,7 @@ import useMutation from "@libs/client/mutation";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { PostWithUserWithCount } from "pages/community";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import useSWR from "swr";
 
 interface PostLiProps {
@@ -28,11 +28,11 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
   const [likePost, { data: likePostData, loading: likePostLoading }] =
     useMutation(`/api/posts/${postId}/likePost`);
 
-  const onLikePost = () => {
+  const onLikePost = useCallback(() => {
     if (likePostLoading) return;
     mutate((prev) => prev && { ...prev, isLikePost: !prev.isLikePost }, false);
     likePost({});
-  };
+  }, [likePost, likePostLoading, mutate]);
 
   const onUserProfile = (username?: string) => {
     router.push(`/users/${username}/profile`);

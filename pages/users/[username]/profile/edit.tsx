@@ -135,7 +135,7 @@ const EditProfile: NextPage = () => {
   }, []);
 
   return (
-    <Layout head="Edit" title="Edit Profile">
+    <Layout head="Edit" title="Edit Profile" showingSearchIcon={false}>
       <div className="max-w-4xl m-auto">
         <div className="space-y-20">
           <div className="flex items-center justify-center">

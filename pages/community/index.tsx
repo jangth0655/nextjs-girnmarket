@@ -26,7 +26,7 @@ const Community: NextPage = () => {
   const loading = !data && !error;
 
   return (
-    <Layout title="Community" head="Community">
+    <Layout title="Community" head="Community" showingSearchIcon={false}>
       <PostUl
         loading={loading}
         posts={data?.posts}

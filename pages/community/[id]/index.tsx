@@ -4,9 +4,11 @@ import CreateComment from "@components/items/post/CreateComment";
 import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
+import useMutation from "@libs/client/mutation";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { PostWithUserWithCount } from "..";
 
@@ -20,10 +22,26 @@ interface PostDetailResponse {
 const PostDetail: NextPage = () => {
   const router = useRouter();
   const { data, error, mutate } = useSWR<PostDetailResponse>(
-    router.query.id ? `/api/posts/${router.query.id}` : null
+    router.query.id ? `/api/posts/${router.query.id}` : null,
+    {}
   );
 
   const loading = !data && !error;
+
+  const [likePost, { data: likePostData, loading: likePostLoading }] =
+    useMutation(`/api/posts/${Number(router.query.id)}/likePost`);
+
+  const onLikePost = useCallback(() => {
+    if (likePostLoading) return;
+    mutate((prev) => prev && { ...prev, isLikePost: !prev.isLikePost }, false);
+    likePost({});
+  }, [likePost, likePostLoading, mutate]);
+
+  useEffect(() => {
+    if (likePostData && likePostData.ok) {
+      mutate();
+    }
+  }, [likePostData, mutate]);
 
   const onEditPost = (postId?: number) => {
     router.push(`/users/edits/post/${postId}`);
@@ -75,6 +93,7 @@ const PostDetail: NextPage = () => {
                   </div>
                 )}
                 <svg
+                  onClick={() => onLikePost()}
                   className={cls(
                     "h-5 w-5  hover:text-red-500 transition-all cursor-pointer",
                     data?.isLikePost ? "text-red-500" : "text-gray-500"

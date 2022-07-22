@@ -39,6 +39,8 @@ model Token {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   payload Int @unique
+
+  @@index([userId])
 }
 
 model Product { 
@@ -56,7 +58,11 @@ model Product {
   reviews Review[]
   favs Fav[]
   records Record[]
+  
+  @@index([userId])
 }
+
+
 
 model Photo { 
   id Int @id @default(autoincrement())
@@ -65,6 +71,8 @@ model Photo {
   url String
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int 
+
+  @@index([productId])
 }
 
 model Review { 
@@ -76,6 +84,9 @@ model Review {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   review String @db.MediumText
+
+  @@index([productId])
+  @@index([userId])
 }
 
 model Fav { 
@@ -87,6 +98,8 @@ model Fav {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   
+  @@index([productId])
+  @@index([userId])
 }
 
 
@@ -99,6 +112,9 @@ model Record {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  
   kind Kind
+
+  @@index([productId])
+  @@index([userId])
 }
 
 enum Kind { 
@@ -118,6 +134,8 @@ model Post {
   comments Comment[]
   likePost LikeComment[]
   image String?
+
+  @@index([userId])
 }
 
 model Comment {
@@ -129,6 +147,9 @@ model Comment {
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
   answer String @db.MediumText
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model LikeComment { 
@@ -139,4 +160,7 @@ model LikeComment {
   userId Int
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
+
+  @@index([userId])
+  @@index([postId])
 }

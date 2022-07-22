@@ -38,8 +38,8 @@ const AboutItem: React.FC<AboutItemProps> = ({ username }) => {
             <h1 className="font-bold text-lg mb-2">Personal website</h1>
             <div className="w-full h-[30%] p-2 border-[1px] rounded-md">
               <span>
-                {data?.userProfile.webSite ? (
-                  data.userProfile.webSite
+                {data?.userProfile.website ? (
+                  data.userProfile.website
                 ) : (
                   <span className="text-gray-500 text-sm">Empty</span>
                 )}

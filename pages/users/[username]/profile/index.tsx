@@ -66,7 +66,7 @@ const Profile: NextPage = () => {
   };
 
   return (
-    <Layout title="Profile" head="Profile">
+    <Layout title="Profile" head="Profile" showingSearchIcon={false}>
       <div className="flex justify-center items-center space-x-8">
         {user?.avatar ? (
           <div className="relative w-36 h-36 rounded-full">

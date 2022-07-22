@@ -2,8 +2,7 @@ import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { CommentWithUser } from "./CommentsItems";
 
 interface CommentItemProps {
@@ -12,7 +11,6 @@ interface CommentItemProps {
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, postId }) => {
-  const router = useRouter();
   const { user } = useUser({ isPrivate: false });
   const confirmUser = comment.user.id === user?.id;
   const [deletePost, { loading: deletePostLoading, data: deletePostData }] =
@@ -22,12 +20,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, postId }) => {
     if (deletePostLoading) return;
     deletePost({ commentId: comment.id });
   };
-
-  /* useEffect(() => {
-    if(deletePostData && deletePostData.ok){ 
-      router.push(`/community`)
-    }
-  },[]) */
 
   return (
     <div className="items-center mb-8">

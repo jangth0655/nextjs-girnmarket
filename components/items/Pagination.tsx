@@ -15,12 +15,10 @@ const Pagination: React.FC<PaginationProps> = ({ count, setPage, page }) => {
   const maxPage = Math.ceil(totalPage / offset);
 
   const onNext = () => {
-    console.log("next");
     setPage((prev) => (prev === maxPage ? maxPage : prev + 1));
   };
 
   const onBack = () => {
-    console.log("back");
     setPage((prev) => (prev === 1 ? 1 : prev - 1));
   };
   return (

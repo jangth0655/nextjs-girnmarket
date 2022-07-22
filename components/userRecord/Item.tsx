@@ -1,21 +1,24 @@
-import { Product } from "@prisma/client";
+import { deliveryFile } from "@libs/client/deliveryImage";
+import { Photo, Product } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 
 interface ItemProps {
-  item: ProductWithCount;
+  item: ProductWithCountWithPhoto;
 }
 
-interface ProductWithCount extends Product {
+interface ProductWithCountWithPhoto extends Product {
   _count: {
     favs: number;
   };
+  photos: Photo[];
 }
 
 const Item: React.FC<ItemProps> = ({ item }) => {
   const router = useRouter();
-  const onProductDetail = (name: string) => {
-    router.push(`/products/${name}`);
+  const onProductDetail = (id: number) => {
+    router.push(`/products/${id}`);
   };
   return (
     <div
@@ -23,11 +26,16 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       key={item?.id}
     >
       <div className="relative w-full h-[90%] rounded-t-md">
-        <div className="w-full h-full bg-slate-400 rounded-t-md"></div>
+        <Image
+          src={deliveryFile(item.photos[0].url)}
+          layout="fill"
+          objectFit="cover"
+          alt=""
+        />
       </div>
       <div className="flex justify-between items-center py-2">
         <span
-          onClick={() => onProductDetail(item?.name)}
+          onClick={() => onProductDetail(item?.id)}
           className="cursor-pointer hover:font-bold px-2 transition-all"
         >
           {item?.name}
