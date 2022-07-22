@@ -214,6 +214,9 @@ const EditProfile: NextPage = () => {
                   type="text"
                   register={register("username", {
                     required: "Username is required.",
+                    validate: {
+                      trim: (value) => value.trim() || "Fill in the blanks",
+                    },
                   })}
                 />
               </div>
