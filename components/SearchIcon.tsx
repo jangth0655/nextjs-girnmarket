@@ -32,8 +32,6 @@ const SearchIcon: React.FC<SearchiconProps> = ({ active }) => {
     reset();
   };
 
-  console.log(active);
-
   useEffect(() => {
     if (keyword) {
       router.push({

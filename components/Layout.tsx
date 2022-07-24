@@ -61,7 +61,6 @@ const Layout: React.FC<LayoutProps> = ({
     "product",
     "community",
     "profile",
-    "favList",
     "upload",
     user?.id ? "logout" : "login",
   ];
@@ -81,6 +80,11 @@ const Layout: React.FC<LayoutProps> = ({
     setActiveNav((prev) => !prev);
   };
 
+  const onLogout = async () => {
+    await (await fetch(`/api/users/${user?.username}/logout`)).json();
+    router.replace("/enter");
+  };
+
   const onNavigate = (nav?: string, username?: string) => {
     switch (nav) {
       case "product":
@@ -92,13 +96,12 @@ const Layout: React.FC<LayoutProps> = ({
       case "profile":
         router.push(`/users/${username}/profile`);
         break;
-      case "favList":
-        router.push(`/users/${username}/favList`);
       case "upload":
         onUpload();
         break;
       case user?.id ? "logout" : "login":
-        user?.id ? router.push("home") : router.push(`/enter`);
+        user?.id ? onLogout() : router.push(`/enter`);
+        break;
       default:
         return;
     }
@@ -225,7 +228,17 @@ const Layout: React.FC<LayoutProps> = ({
                       </>
                     ) : (
                       <>
-                        <div className="w-full h-full rounded-full bg-slate-300  relative"></div>
+                        <div className="w-full h-full rounded-full bg-slate-300  relative flex justify-center items-center">
+                          <svg
+                            className="h-5 w-5 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
                         <ProfileNav
                           profileNav={profileNav}
                           username={user?.username}
@@ -298,7 +311,7 @@ const Layout: React.FC<LayoutProps> = ({
                       {activeNavItem.map((nav, i) => (
                         <div className="relative flex items-center p-4" key={i}>
                           <span
-                            className="cursor-pointer"
+                            className="cursor-pointer text-gray-400 hover:text-gray-700 transition-all"
                             onClick={() => onNavigate(nav, user?.username)}
                           >
                             {nav}

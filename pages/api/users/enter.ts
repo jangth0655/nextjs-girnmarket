@@ -18,9 +18,7 @@ const handler = async (
         id: true,
       },
     });
-    /* if (user) {
-      return res.status(401).json({ ok: false, error: "중복된 입력입니다." });
-    } */
+
     const token = await client.token.create({
       data: {
         payload,
@@ -30,7 +28,7 @@ const handler = async (
               email,
             },
             create: {
-              username: username.trim(),
+              username,
               email,
             },
           },

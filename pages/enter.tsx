@@ -89,12 +89,12 @@ const Enter: NextPage = () => {
     }
   }, [router, tokenData]);
 
-  const onValid = (data: EnterForm) => {
+  const onValid = ({ email, username }: EnterForm) => {
     if (loading) return;
     if (error) {
       setError("error", { message: error });
     }
-    enter(data);
+    enter({ email, username: username.trim() });
   };
 
   const onTokenValid = (data: TokenForm) => {
@@ -108,7 +108,7 @@ const Enter: NextPage = () => {
   const ErrorState = errors.email || errors.username || errors.error;
 
   return (
-    <section className="min-h-screen flex text-gray-700">
+    <section className="min-h-screen flex text-gray-700 px-2">
       {windowSize > 965 ? (
         <div className="relative w-[50%] h-screen">
           <Image src={enterImage} layout="fill" objectFit="cover" alt="enter" />
@@ -185,9 +185,6 @@ const Enter: NextPage = () => {
                     <EnterInput
                       register={register("username", {
                         required: "Username is required.",
-                        validate: {
-                          trim: (value) => value.trim() || "Fill in the blanks",
-                        },
                       })}
                       placeholder="Username"
                       text="Username"

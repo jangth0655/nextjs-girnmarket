@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   const loading = !data && !error;
 
   return (
-    <Layout head="Main">
+    <Layout head="Mart" title="Product">
       {loading ? (
         "loading.."
       ) : (
