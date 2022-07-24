@@ -2,21 +2,26 @@ import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { cls } from "@libs/client/cls";
 
 const searchVariant: Variants = {
-  initial: {
-    scaleX: 0,
-  },
+  initial: (active: boolean) => ({
+    scaleX: active ? 0 : 0,
+  }),
   animate: {
     scaleX: 1,
   },
 };
 
+interface SearchiconProps {
+  active?: boolean;
+}
+
 interface SearchForm {
   keyword: string;
 }
 
-const SearchIcon: React.FC = () => {
+const SearchIcon: React.FC<SearchiconProps> = ({ active }) => {
   const router = useRouter();
   const [showingSearch, setShowingSearch] = useState(false);
   const { register, handleSubmit, reset } = useForm<SearchForm>();
@@ -26,6 +31,8 @@ const SearchIcon: React.FC = () => {
     setKeyword(formData.keyword);
     reset();
   };
+
+  console.log(active);
 
   useEffect(() => {
     if (keyword) {
@@ -47,19 +54,33 @@ const SearchIcon: React.FC = () => {
           {...register("keyword", {
             required: true,
           })}
+          custom={active}
           variants={searchVariant}
           initial="initial"
           animate="animate"
           type="text"
           transition={{ type: "linear" }}
           placeholder="Search"
-          className="border-2 pl-10 rounded-lg origin-right border-gray-200 placeholder:text-sm text-gray-700 focus:border-pink-400"
+          className={cls(
+            active
+              ? "origin-left"
+              : "border-2 pl-8 rounded-lg origin-right border-gray-200 placeholder:text-sm text-gray-700 focus:border-pink-400"
+          )}
         />
       ) : null}
       <motion.svg
         onClick={() => setShowingSearch((prev) => !prev)}
-        className="h-5 w-5 text-gray-500 absolute right-2 cursor-pointer"
-        animate={{ x: showingSearch ? -178 : 0 }}
+        className={cls(
+          "h-5 w-5 text-gray-500 absolute right-2 cursor-pointer",
+          active ? "left-0" : "right-2"
+        )}
+        animate={
+          active
+            ? { x: showingSearch ? 180 : 0 }
+            : {
+                x: showingSearch ? -178 : 0,
+              }
+        }
         transition={{ type: "linear" }}
         fill="none"
         viewBox="0 0 24 24"

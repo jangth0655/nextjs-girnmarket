@@ -7,7 +7,7 @@ interface NavTitleProps {
 const NavTitle: React.FC<NavTitleProps> = ({ title }) => {
   return (
     <div>
-      <h1 className="text-lg md:text-2xl font-bold text-black">{title}</h1>
+      <h1 className="text-base md:text-lg font-bold text-black">{title}</h1>
     </div>
   );
 };

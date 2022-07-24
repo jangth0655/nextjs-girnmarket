@@ -10,7 +10,7 @@ const Pagination: React.FC<PaginationProps> = ({ count, setPage, page }) => {
   let pageNumberArray = [];
   pageNumberArray.push(page);
 
-  const totalPage = count ? count : 0;
+  const totalPage = count ? count : 1;
   const offset = 5;
   const maxPage = Math.ceil(totalPage / offset);
 

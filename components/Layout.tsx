@@ -28,8 +28,6 @@ const navItem = [
   { name: "community", path: "/community" },
 ];
 
-const activeNavItem = ["product", "community", "profile", "favList", "upload"];
-
 const scrollVariant: Variants = {
   top: {
     opacity: 0,
@@ -59,6 +57,15 @@ const Layout: React.FC<LayoutProps> = ({
     setWindowSize(window.innerWidth);
   }, []);
 
+  const activeNavItem = [
+    "product",
+    "community",
+    "profile",
+    "favList",
+    "upload",
+    user?.id ? "logout" : "login",
+  ];
+
   useEffect(() => {
     window.addEventListener("resize", handleSize);
     return () => {
@@ -74,7 +81,7 @@ const Layout: React.FC<LayoutProps> = ({
     setActiveNav((prev) => !prev);
   };
 
-  const onNavigate = (nav: string, username?: string) => {
+  const onNavigate = (nav?: string, username?: string) => {
     switch (nav) {
       case "product":
         router.push("/");
@@ -90,6 +97,8 @@ const Layout: React.FC<LayoutProps> = ({
       case "upload":
         onUpload();
         break;
+      case user?.id ? "logout" : "login":
+        user?.id ? router.push("home") : router.push(`/enter`);
       default:
         return;
     }
@@ -263,7 +272,7 @@ const Layout: React.FC<LayoutProps> = ({
               <NavTitle title={title} />
 
               <div className="flex items-center space-x-4">
-                <SearchIcon />
+                {windowSize < 768 ? null : <SearchIcon />}
 
                 <div>
                   <svg
@@ -287,7 +296,7 @@ const Layout: React.FC<LayoutProps> = ({
                       exit="exit"
                     >
                       {activeNavItem.map((nav, i) => (
-                        <div className="flex items-center p-4" key={i}>
+                        <div className="relative flex items-center p-4" key={i}>
                           <span
                             className="cursor-pointer"
                             onClick={() => onNavigate(nav, user?.username)}
@@ -296,6 +305,9 @@ const Layout: React.FC<LayoutProps> = ({
                           </span>
                         </div>
                       ))}
+                      <div className="h-8 w-[100%] pl-4 relative mt-4">
+                        <SearchIcon active={true} />
+                      </div>
                     </motion.div>
                   ) : null}
                 </AnimatePresence>

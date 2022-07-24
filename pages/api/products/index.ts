@@ -104,6 +104,6 @@ export default withSessionAPI(
   withHandler({
     handler,
     method: ["GET", "POST"],
-    isPrivate: true,
+    isPrivate: false,
   })
 );
