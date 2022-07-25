@@ -5,6 +5,7 @@ import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
+import useUser from "@libs/client/useUser";
 import { Photo, Product, User } from "@prisma/client";
 import { NextPage } from "next";
 import Image from "next/image";
@@ -32,6 +33,7 @@ interface ProductDetailResponse {
 
 const ProductDetail: NextPage = () => {
   const router = useRouter();
+  const { user } = useUser({ isPrivate: true });
   const [hover, setHover] = useState(false);
   const { data, error, mutate } = useSWR<ProductDetailResponse>(
     router.query.id && `/api/products/${router.query.id}`

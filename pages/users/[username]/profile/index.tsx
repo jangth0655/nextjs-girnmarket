@@ -38,7 +38,7 @@ interface UserProfileResponse {
 
 const Profile: NextPage = () => {
   const router = useRouter();
-  const { user } = useUser({ isPrivate: false });
+  const { user } = useUser({ isPrivate: true });
   const [confirmUser, setConfirmUser] = useState(false);
   const { data, error } = useSWR<UserProfileResponse>(
     router.query.username && `/api/users/${router.query.username}`

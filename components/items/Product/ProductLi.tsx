@@ -1,6 +1,7 @@
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
+import useUser from "@libs/client/useUser";
 import { Photo, Product, User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -29,6 +30,7 @@ interface ProductResponse {
 const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
   const router = useRouter();
   const [hover, setHover] = useState(false);
+  const { user } = useUser({ isPrivate: false });
   const { data, error, mutate } = useSWR<ProductResponse>(
     `/api/products/${productId}`
   );
@@ -77,8 +79,11 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
     router.push(`/products/${id}`);
   };
 
-  const onUserProfile = (username?: string) => {
-    router.push(`/users/${username}/profile`);
+  const onUserProfile = (username: string) => {
+    if (!username && username === undefined) {
+      router.push(`/enter`);
+    }
+    router.push(user?.id ? `/users/${username}/profile` : "/enter");
   };
 
   return (
@@ -86,10 +91,10 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
       <div
         onMouseOver={handleOver}
         onMouseLeave={handleLeave}
-        key={data?.product.id}
+        key={data?.product?.id}
         className="h-96 shadow-sm rounded-md relative cursor-pointer transition-all"
       >
-        {hover ? (
+        {hover && user?.id ? (
           <div className="absolute bg-gradient-to-t from-black w-full h-[30%] bottom-0 z-10 rounded-md transition-all">
             <div className="px-4 h-full flex justify-between items-center">
               <span className="z-10 text-white ">{data?.product?.name}</span>
@@ -123,7 +128,7 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
         >
           <Image
             className="rounded-md"
-            src={deliveryFile(data?.product.photos[0].url)}
+            src={deliveryFile(data?.product?.photos[0]?.url)}
             layout="fill"
             objectFit="cover"
             alt=""
@@ -134,7 +139,13 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
         <div className="flex justify-between items-center py-1">
           <div className="flex items-center ">
             <div
-              onClick={() => onUserProfile(data?.product?.user?.username)}
+              onClick={() =>
+                onUserProfile(
+                  data?.product?.user?.username
+                    ? data?.product?.user?.username
+                    : ""
+                )
+              }
               className="relative w-6 h-6 rounded-full mr-2"
             >
               {data?.product?.user.avatar ? (
@@ -159,30 +170,41 @@ const ProductLi: React.FC<ProductLiProps> = ({ productId }) => {
                 </div>
               )}
             </div>
-            <div onClick={() => onUserProfile(data?.product?.user?.username)}>
-              <span>{data?.product?.user.username}</span>
+            <div
+              onClick={() =>
+                onUserProfile(
+                  data?.product?.user?.username
+                    ? data?.product?.user?.username
+                    : ""
+                )
+              }
+            >
+              <span>{data?.product?.user?.username}</span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <svg
-              onClick={() => onFav()}
-              className={cls(
-                "h-5 w-5 hover:scale-110 transition-all",
-                data?.isLiked ? "text-red-500" : "text-gray-500"
-              )}
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>
-              {data?.product?._count.favs ? data?.product?._count.favs : 0}
-            </span>
-          </div>
+
+          {user?.id ? (
+            <div className="flex items-center space-x-2">
+              <svg
+                onClick={() => onFav()}
+                className={cls(
+                  "h-5 w-5 hover:scale-110 transition-all",
+                  data?.isLiked ? "text-red-500" : "text-gray-500"
+                )}
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>
+                {data?.product?._count.favs ? data?.product?._count.favs : 0}
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
     </>

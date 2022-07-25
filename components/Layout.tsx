@@ -94,7 +94,7 @@ const Layout: React.FC<LayoutProps> = ({
         router.push("/community");
         break;
       case "profile":
-        router.push(`/users/${username}/profile`);
+        router.push(user?.id ? `/users/${username}/profile` : "/enter");
         break;
       case "upload":
         onUpload();

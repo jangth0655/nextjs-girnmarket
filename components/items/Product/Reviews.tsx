@@ -42,10 +42,10 @@ const Reviews: React.FC<ReviewPorps> = ({ id }) => {
 
   return (
     <div>
-      {data?.productReviews?.reviews.map((review) => (
+      {data?.productReviews?.reviews?.map((review) => (
         <ReviewItem key={review.id} review={review} productId={id} />
       ))}
-      {data?.productReviews.reviews.length === 0 ? null : (
+      {data?.productReviews?.reviews?.length === 0 ? null : (
         <div className="my-4 flex justify-center space-x-5 text-gray-400 ">
           <div onClick={() => onBack()} className="">
             <svg
