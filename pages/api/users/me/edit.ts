@@ -14,6 +14,8 @@ const handler = async (
 
     const { email, username, avatarId, bio, website } = req.body;
 
+    console.log(req.body.username);
+
     const confirmUser = username ? { username } : email && { email };
 
     const currentUser = await client.user.findUnique({

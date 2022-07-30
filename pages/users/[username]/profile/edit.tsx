@@ -64,7 +64,7 @@ const EditProfile: NextPage = () => {
         })
       ).json();
 
-      edit({ ...data, avatarId: id });
+      edit({ avatarId: id, ...data });
       if (error) {
         setError("error", { message: error });
         formRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -133,6 +133,9 @@ const EditProfile: NextPage = () => {
   useEffect(() => {
     setStopDelete(false);
   }, []);
+
+  console.log(errors.username);
+  console.log(errors.email);
 
   return (
     <Layout head="Edit" title="Edit Profile" showingSearchIcon={false}>
@@ -213,12 +216,15 @@ const EditProfile: NextPage = () => {
                   placeholder="Username"
                   type="text"
                   register={register("username", {
-                    required: "Username is required.",
                     validate: {
-                      trim: (value) => value.trim() || "Fill in the blanks",
+                      NotTrim: (value) =>
+                        !value.includes(" ") || "Please remove empty space.",
                     },
                   })}
                 />
+                {errors?.username?.message && (
+                  <ErrorMessage errorText={errors?.username?.message} />
+                )}
               </div>
               <div>
                 <Input
