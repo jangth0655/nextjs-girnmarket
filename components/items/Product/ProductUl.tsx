@@ -16,7 +16,7 @@ const ProductUl: React.FC<ItemUlProps> = ({ title, products, loading }) => {
     <>
       <PageTitle title={title ? title : ""} />
       <main className="m-auto mt-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 sm:space-y-0 space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-8 sm:space-y-0 space-y-8">
           {products &&
             products.map((product) => (
               <ProductLi key={product.id} productId={product.id} />

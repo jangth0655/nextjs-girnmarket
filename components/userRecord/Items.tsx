@@ -48,7 +48,7 @@ const Items: React.FC<ItemsProps> = ({
   };
 
   return (
-    <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-10">
+    <div className="w-full grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10">
       {myPurchase &&
         myPurchase?.map((item) => (
           <Item key={item.product.id} item={item.product} />
@@ -132,7 +132,12 @@ const Items: React.FC<ItemsProps> = ({
           >
             {item.image ? (
               <div className="relative w-full h-[60%] rounded-t-md">
-                <div className="w-full h-full bg-slate-400 rounded-t-md"></div>
+                <Image
+                  src={deliveryFile(item.image)}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                />
               </div>
             ) : null}
 

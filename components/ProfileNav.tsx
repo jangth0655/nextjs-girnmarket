@@ -3,15 +3,11 @@ import React, { useEffect } from "react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import useUser from "@libs/client/useUser";
 
-const profileNavItem = ["profile", "favList", "logout"];
+const profileNavItem = ["profile", "logout"];
 
 interface ProfileNavProps {
   username?: string;
   profileNav?: boolean;
-}
-
-interface LogoutResponse {
-  ok: boolean;
 }
 
 const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
@@ -21,9 +17,6 @@ const ProfileNav: React.FC<ProfileNavProps> = ({ username, profileNav }) => {
     switch (nav) {
       case "profile":
         router.push(`/users/${username}/profile`);
-        break;
-      case "favList":
-        router.push(`/users/${username}/favList`);
         break;
       case "logout":
         onLogout();

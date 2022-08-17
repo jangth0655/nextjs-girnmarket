@@ -12,12 +12,13 @@ const handler = async (
 
     const user = await client.user.findFirst({
       where: {
-        OR: [{ email }, { username }],
+        username,
       },
       select: {
         id: true,
       },
     });
+    console.log(user);
 
     const token = await client.token.create({
       data: {
@@ -25,7 +26,7 @@ const handler = async (
         user: {
           connectOrCreate: {
             where: {
-              email,
+              username,
             },
             create: {
               username,
