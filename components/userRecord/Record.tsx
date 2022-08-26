@@ -7,7 +7,7 @@ const DynamicProducts = dynamic(() => import("./ProductItem"), {
   suspense: true,
 });
 
-const DynamicPurchaseItem = dynamic(() => import("./ProductItem"), {
+const DynamicPurchaseItem = dynamic(() => import("./PurchaseItem"), {
   suspense: true,
 });
 
@@ -55,12 +55,12 @@ const Record: React.FC<RecordProps> = ({ mark, username }) => {
         </Suspense>
       )}
       {mark === "sale" && (
-        <Suspense fallback={"loadConfig..."}>
+        <Suspense fallback={"Loading..."}>
           <DynamicSaleItem />
         </Suspense>
       )}
       {mark === "about" && (
-        <Suspense>
+        <Suspense fallback={"Loading..."}>
           <DynamicAboutItem username={username} />
         </Suspense>
       )}
