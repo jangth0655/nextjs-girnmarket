@@ -1,11 +1,10 @@
 import Pagination from "@components/items/Pagination";
 import ProductUl from "@components/items/Product/ProductUl";
 import Layout from "@components/Layout";
-import client from "@libs/server/client";
 import { Photo, Product, User } from "@prisma/client";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
-import useSWR, { SWRConfig } from "swr";
+import useSWR from "swr";
 
 export interface WithPhotoWithCountWithUser extends Product {
   _count: {
@@ -30,7 +29,7 @@ const Home: NextPage = () => {
   return (
     <Layout head="Mart" title="Product">
       {loading ? (
-        "loading.."
+        "Loading.."
       ) : (
         <>
           <div className="">
@@ -54,53 +53,4 @@ const Home: NextPage = () => {
   );
 };
 
-const Page: NextPage<{ products: WithPhotoWithCountWithUser[] }> = ({
-  products,
-}) => {
-  return (
-    <SWRConfig
-      value={{
-        fallback: {
-          "/api/products": {
-            ok: true,
-            products,
-          },
-        },
-      }}
-    >
-      <Home />
-    </SWRConfig>
-  );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const products = await client.product.findMany({
-    include: {
-      user: {
-        select: {
-          id: true,
-          username: true,
-          avatar: true,
-        },
-      },
-      _count: {
-        select: {
-          favs: true,
-        },
-      },
-      photos: {
-        select: {
-          url: true,
-          id: true,
-        },
-      },
-    },
-  });
-  return {
-    props: {
-      products: JSON.parse(JSON.stringify(products)),
-    },
-  };
-};
-
-export default Page;
+export default Home;

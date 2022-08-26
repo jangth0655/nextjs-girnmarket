@@ -1,11 +1,30 @@
 import { MarkType } from "pages/users/[username]/profile";
-import React from "react";
-import AboutItem from "./AboutItem";
-import LikeItem from "./LikeItem";
-import PostItem from "./PostItem";
-import ProductItem from "./ProductItem";
-import PurchaseItem from "./PurchaseItem";
-import SaleItem from "./SaleItem";
+import React, { Suspense } from "react";
+
+import dynamic from "next/dynamic";
+
+const DynamicProducts = dynamic(() => import("./ProductItem"), {
+  suspense: true,
+});
+
+const DynamicPurchaseItem = dynamic(() => import("./ProductItem"), {
+  suspense: true,
+});
+
+const DynamicPostItem = dynamic(() => import("./PostItem"), {
+  suspense: true,
+});
+
+const DynamicLikeItem = dynamic(() => import("./LikeItem"), {
+  suspense: true,
+});
+
+const DynamicSaleItem = dynamic(() => import("./SaleItem"), {
+  suspense: true,
+});
+const DynamicAboutItem = dynamic(() => import("./AboutItem"), {
+  suspense: true,
+});
 
 interface RecordProps {
   mark?: MarkType;
@@ -15,12 +34,36 @@ interface RecordProps {
 const Record: React.FC<RecordProps> = ({ mark, username }) => {
   return (
     <div className="w-ful">
-      {mark === "product" && <ProductItem username={username} />}
-      {mark === "post" && <PostItem username={username} />}
-      {mark === "purchase" && <PurchaseItem username={username} />}
-      {mark === "favList" && <LikeItem username={username} />}
-      {mark === "sale" && <SaleItem username={username} />}
-      {mark === "about" && <AboutItem username={username} />}
+      {mark === "product" && (
+        <Suspense fallback={"Loading..."}>
+          <DynamicProducts username={username} />
+        </Suspense>
+      )}
+      {mark === "post" && (
+        <Suspense fallback={"Loading..."}>
+          <DynamicPostItem username={username} />
+        </Suspense>
+      )}
+      {mark === "purchase" && (
+        <Suspense fallback={"Loading..."}>
+          <DynamicPurchaseItem username={username} />
+        </Suspense>
+      )}
+      {mark === "favList" && (
+        <Suspense fallback={`Loading....`}>
+          <DynamicLikeItem username={username} />
+        </Suspense>
+      )}
+      {mark === "sale" && (
+        <Suspense fallback={"loadConfig..."}>
+          <DynamicSaleItem />
+        </Suspense>
+      )}
+      {mark === "about" && (
+        <Suspense>
+          <DynamicAboutItem username={username} />
+        </Suspense>
+      )}
     </div>
   );
 };

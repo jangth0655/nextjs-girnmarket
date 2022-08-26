@@ -1,6 +1,5 @@
 import EnterButton from "@components/enter/EnterButton";
 import EnterInput from "@components/enter/EnterInput";
-import EnterLinkMessage from "@components/enter/EnterLinkMessage";
 import ErrorMessage from "@components/enter/ErrorMessage";
 import { cls } from "@libs/client/cls";
 import useMutation from "@libs/client/mutation";
@@ -111,7 +110,13 @@ const Enter: NextPage = () => {
     <section className="min-h-screen flex text-gray-700 px-2">
       {windowSize > 965 ? (
         <div className="relative w-[50%] h-screen">
-          <Image src={enterImage} layout="fill" objectFit="cover" alt="enter" />
+          <Image
+            src={enterImage}
+            layout="fill"
+            objectFit="cover"
+            alt="enter"
+            placeholder="blur"
+          />
         </div>
       ) : null}
       <main
@@ -120,7 +125,13 @@ const Enter: NextPage = () => {
         <div className="max-w-sm m-auto space-y-12">
           <div>
             <div className="relative w-40 h-40 mb-8">
-              <Image src={logo} layout="fill" objectFit="cover" alt="logo" />
+              <Image
+                src={logo}
+                layout="fill"
+                objectFit="cover"
+                alt="logo"
+                placeholder="blur"
+              />
             </div>
             <h1 className="text-xl font-bold">Sign up to GrinMarket</h1>
           </div>
