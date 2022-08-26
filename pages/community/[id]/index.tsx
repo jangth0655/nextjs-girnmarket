@@ -111,7 +111,7 @@ const PostDetail: NextPage = () => {
             </div>
 
             <div className={cls("ml-6", data?.post?.image ? "h-full" : "")}>
-              {data?.post?.image && (
+              {data?.post?.image ? (
                 <div className="h-[60%] w-[70%] sm:w-[40%] rounded-md">
                   <div className="relative w-full h-full">
                     <Image
@@ -123,14 +123,14 @@ const PostDetail: NextPage = () => {
                     />
                   </div>
                 </div>
-              )}
+              ) : null}
               <div className="mt-4 overflow-y-scroll">
                 <p>{data?.post?.question}</p>
               </div>
             </div>
           </div>
           {/* comments */}
-          <div className="mt-4 space-y-6">
+          <div className="space-y-6">
             <div className="flex items-center space-x-3">
               <h1 className="font-bold text-lg">Comments</h1>
             </div>

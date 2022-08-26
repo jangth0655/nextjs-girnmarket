@@ -144,7 +144,7 @@ const EditProduct: NextPage = () => {
         <div>
           <div className="max-w-4xl m-auto min-h-screen">
             <PageTitle title="Edit Product" />
-            <div className="mt-16 ">
+            <div className="mt-16">
               <form
                 ref={formRef}
                 onSubmit={handleSubmit(onValid)}
@@ -205,7 +205,9 @@ const EditProduct: NextPage = () => {
                     })}
                   />
                 </div>
-                <EnterButton text="Edit Product" loading={editLoading} />
+                <div className="pb-2">
+                  <EnterButton text="Edit Product" loading={editLoading} />
+                </div>
               </form>
             </div>
           </div>
