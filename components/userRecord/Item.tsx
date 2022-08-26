@@ -25,7 +25,10 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       className="w-[100%] md:h-72 h-96 shadow-md rounded-md flex flex-col justify-center"
       key={item?.id}
     >
-      <div className="relative w-full h-[90%] rounded-t-md">
+      <div
+        onClick={() => onProductDetail(item?.id)}
+        className="relative w-full h-[90%] rounded-t-md cursor-pointer"
+      >
         <Image
           src={deliveryFile(item.photos[0].url)}
           layout="fill"
