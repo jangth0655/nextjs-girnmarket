@@ -52,18 +52,18 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
     <div
       className={cls(
         "last:mb-0 mb-14 shadow-md px-2 pt-2 bg-slate-100 rounded-lg max-w-4xl m-auto",
-        data?.post.image ? "h-72 " : ""
+        data?.post?.image ? "h-72 " : ""
       )}
     >
       <div className="flex items-center space-x-1 justify-between">
         <div className="flex items-center space-x-2">
           <div
-            onClick={() => onUserProfile(data?.post.user.username)}
+            onClick={() => onUserProfile(data?.post.user?.username)}
             className="w-8 h-8 rounded-full relative cursor-pointer"
           >
             {data?.post?.user?.avatar ? (
               <Image
-                src={deliveryFile(data?.post.user.avatar)}
+                src={deliveryFile(data?.post.user?.avatar)}
                 layout="fill"
                 objectFit="cover"
                 className="rounded-full"
@@ -88,10 +88,10 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
             )}
           </div>
           <span
-            onClick={() => onUserProfile(data?.post.user.username)}
+            onClick={() => onUserProfile(data?.post.user?.username)}
             className="text-sm font-bold cursor-pointer"
           >
-            {data?.post.user.username}
+            {data?.post.user?.username}
           </span>
         </div>
         <div className="flex items-center space-x-1">
@@ -123,15 +123,15 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
               />
             </svg>
           </div>
-          <span className="text-sm">{data?.post._count.likePost}</span>
+          <span className="text-sm">{data?.post._count?.likePost}</span>
         </div>
       </div>
 
       <div className="w-[90%] h-[85%] flex mt-2 ml-10 py-2 items-center">
-        {data?.post.image && (
+        {data?.post?.image && (
           <div className="w-[100%] h-[80%] md:h-[90%] sm:w-[50%] md:w-[40%] relative rounded-md mr-8">
             <Image
-              src={deliveryFile(data?.post.image)}
+              src={deliveryFile(data?.post?.image)}
               layout="fill"
               objectFit="cover"
               alt=""
@@ -140,7 +140,7 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
           </div>
         )}
         <div className="h-[85%] overflow-y-scroll w-full">
-          <p>{data?.post.question}</p>
+          <p>{data?.post?.question}</p>
         </div>
       </div>
     </div>

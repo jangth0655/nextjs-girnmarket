@@ -14,19 +14,11 @@ const handler = async (
     const pageSize = 10;
     const pageNumber = Number(page);
 
-    const term = keyword
-      ? String(keyword)
-          ?.split(" ")
-          .map((word?: string) => ({
-            name: {
-              startsWith: word,
-            },
-          }))
-      : [];
-
     const products = await client.product.findMany({
       where: {
-        OR: term,
+        name: {
+          contains: String(keyword),
+        },
       },
       select: {
         id: true,
