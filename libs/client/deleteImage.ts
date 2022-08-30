@@ -6,7 +6,7 @@ export interface DeleteImage {
   };
 }
 
-export const deleteImage = async (imageId?: string) => {
+export const deleteImage = async (imageId?: string | null) => {
   try {
     const response: DeleteImage = await (
       await fetch(`/api/deleteFile/${imageId}`)

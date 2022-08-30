@@ -1,10 +1,8 @@
-import Pagination from "@components/items/Pagination";
 import ProductUl from "@components/items/Product/ProductUl";
 import Layout from "@components/Layout";
 import { Photo, Product, User } from "@prisma/client";
-import type { NextPage } from "next";
-import { useState } from "react";
-import useSWR from "swr";
+import type { GetStaticProps, NextPage } from "next";
+import client from "@libs/server/client";
 
 export interface WithPhotoWithCountWithUser extends Product {
   _count: {
@@ -19,38 +17,49 @@ export interface ProductListResponse {
   products: WithPhotoWithCountWithUser[];
 }
 
-const Home: NextPage = () => {
-  const [page, setPage] = useState(1);
-  const { data, error, mutate } = useSWR<ProductListResponse>(
-    `/api/products?page=${page}`
-  );
-  const loading = !data && !error;
-
+const Home: NextPage<{ products: WithPhotoWithCountWithUser[] }> = ({
+  products,
+}) => {
   return (
     <Layout head="Mart" title="Product">
-      {loading ? (
-        "Loading.."
-      ) : (
-        <>
-          <div className="">
-            <ProductUl
-              title="Choose your favorite"
-              products={data?.products}
-              loading={loading}
-              mutate={mutate}
-            />
-          </div>
-          <div className="mt-32">
-            <Pagination
-              count={data?.products?.length}
-              page={page}
-              setPage={setPage}
-            />
-          </div>
-        </>
-      )}
+      <>
+        <div className="">
+          <ProductUl title="Choose your favorite" products={products} />
+        </div>
+      </>
     </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const products = await client.product.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+        },
+      },
+      _count: {
+        select: {
+          favs: true,
+        },
+      },
+      photos: {
+        select: {
+          url: true,
+          id: true,
+        },
+      },
+    },
+  });
+
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
 };
 
 export default Home;

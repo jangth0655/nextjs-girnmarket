@@ -216,4 +216,5 @@ const EditProduct: NextPage = () => {
     </Layout>
   );
 };
+
 export default EditProduct;

@@ -45,26 +45,32 @@ const NewProduct: NextPage = () => {
     useMutation<UploadProductMutation>("/api/products");
 
   const onValid = async (data: UploadProductForm) => {
+    if (loading) return;
     if (data.image && data.image.length === 0) {
       setImageRequired(true);
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }
     if (data.image && data.image.length > 0) {
       setImageRequired(false);
-      const { uploadURL } = await (await fetch("/api/file")).json();
-      const form = new FormData();
-      form.append("file", data?.image[0], `${user?.username}_${data.name}`);
-      const {
-        result: { id },
-      } = await (
-        await fetch(uploadURL, {
-          method: "POST",
-          body: form,
-        })
-      ).json();
-      createProduct({ ...data, productId: id });
-      if (error) {
-        setError("error", { message: error });
+      try {
+        const { uploadURL } = await (await fetch("/api/file")).json();
+
+        const form = new FormData();
+        form.append("file", data?.image[0], `${user?.username}_${data.name}`);
+        const {
+          result: { id },
+        } = await (
+          await fetch(uploadURL, {
+            method: "POST",
+            body: form,
+          })
+        ).json();
+        createProduct({ ...data, productId: id });
+        if (error) {
+          setError("error", { message: error });
+        }
+      } catch (e) {
+        return console.log(`${e}`);
       }
     }
   };

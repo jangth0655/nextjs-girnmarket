@@ -1,3 +1,4 @@
+import { deleteImage } from "@libs/client/deleteImage";
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withSessionAPI } from "@libs/server/withSession";
@@ -13,7 +14,7 @@ const handler = async (
       session: { user },
     } = req;
 
-    const { price, description, name, photoId, photoUrl } = req.body;
+    const { price, description, name, prePhotoId, newPhotoId } = req.body;
 
     const existProduct = await client.product.findFirst({
       where: {
@@ -71,10 +72,10 @@ const handler = async (
       });
     }
 
-    if (photoId && photoUrl !== existProduct.photos[0].url) {
+    if (prePhotoId && newPhotoId !== existProduct.photos[0].url) {
       const existPhoto = await client.photo.findUnique({
         where: {
-          id: photoId,
+          id: prePhotoId,
         },
         select: {
           id: true,
@@ -85,16 +86,18 @@ const handler = async (
       }
       await client.photo.delete({
         where: {
-          id: photoId,
+          id: prePhotoId,
         },
       });
+      await deleteImage(prePhotoId);
       await client.photo.create({
         data: {
           productId: Number(id),
-          url: photoUrl,
+          url: newPhotoId,
         },
       });
     }
+    await res.revalidate("/");
 
     return res.status(200).json({ ok: true });
   } catch (e) {

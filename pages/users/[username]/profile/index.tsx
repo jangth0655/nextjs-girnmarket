@@ -1,17 +1,16 @@
 import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import useUser from "@libs/client/useUser";
-import { GetServerSideProps, NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Record from "@components/userRecord/Record";
 import { useRouter } from "next/router";
-import useSWR, { SWRConfig } from "swr";
+import useSWR from "swr";
 import { User } from "@prisma/client";
 import { dateFormate } from "@libs/client/dateFormat";
 import Image from "next/image";
 import { deliveryFile } from "@libs/client/deliveryImage";
-import { withSsrSession } from "@libs/server/withSession";
 import client from "@libs/server/client";
 
 const profileRecord = [
@@ -166,45 +165,4 @@ const Profile: NextPage = () => {
   );
 };
 
-const Page: NextPage<{ existUser: User }> = ({ existUser }) => {
-  return (
-    <SWRConfig
-      value={{
-        fallback: {
-          "/api/users/me": {
-            ok: true,
-            user: existUser,
-          },
-        },
-      }}
-    >
-      <Profile />
-    </SWRConfig>
-  );
-};
-
-export const getServerSideProps: GetServerSideProps = withSsrSession(
-  async ({ req }: NextPageContext) => {
-    const userProfile = await client.user.findUnique({
-      where: {
-        id: req?.session.user?.id,
-      },
-      select: {
-        username: true,
-        id: true,
-        avatar: true,
-        email: true,
-        createdAt: true,
-        bio: true,
-        website: true,
-      },
-    });
-    return {
-      props: {
-        userProfile: JSON.parse(JSON.stringify(userProfile)),
-      },
-    };
-  }
-);
-
-export default Page;
+export default Profile;

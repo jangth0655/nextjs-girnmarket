@@ -7,7 +7,7 @@ import PostLi from "./PostLi";
 interface PostUlProps {
   posts?: PostWithUserWithCount[];
   title: string;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const PostUl: React.FC<PostUlProps> = ({ title, posts, loading }) => {

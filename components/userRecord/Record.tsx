@@ -33,7 +33,7 @@ interface RecordProps {
 
 const Record: React.FC<RecordProps> = ({ mark, username }) => {
   return (
-    <div className="w-ful">
+    <div className="w-full">
       {mark === "product" && (
         <Suspense fallback={"Loading..."}>
           <DynamicProducts username={username} />

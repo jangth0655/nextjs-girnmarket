@@ -74,4 +74,5 @@ const Reviews: React.FC<ReviewPorps> = ({ id }) => {
     </div>
   );
 };
+
 export default Reviews;

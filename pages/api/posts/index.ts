@@ -44,7 +44,7 @@ const handler = async (
     }
 
     if (req.method === "POST") {
-      const post = await client.post.create({
+      await client.post.create({
         data: {
           question,
           user: {
@@ -55,6 +55,8 @@ const handler = async (
           ...(imageId && { image: imageId }),
         },
       });
+      await res.revalidate("/community");
+
       return res.status(201).json({ ok: true });
     }
   } catch (e) {

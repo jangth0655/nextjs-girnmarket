@@ -71,6 +71,7 @@ const handler = async (
           review,
         },
       });
+
       return res.status(201).json({ ok: true, review: newReview });
     }
   } catch (e) {

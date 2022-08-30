@@ -1,3 +1,4 @@
+import { deleteImage } from "@libs/client/deleteImage";
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withSessionAPI } from "@libs/server/withSession";
@@ -19,8 +20,10 @@ const handler = async (
       },
       select: {
         id: true,
+        image: true,
       },
     });
+
     if (!existPost) {
       return res
         .status(404)
@@ -32,6 +35,11 @@ const handler = async (
         },
       });
     }
+    if (existPost?.image) {
+      await deleteImage(existPost.image);
+    }
+    await res.revalidate("/community");
+
     return res.status(200).json({ ok: true });
   } catch (e) {
     console.log(`${e} Error in handler`);

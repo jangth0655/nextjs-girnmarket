@@ -40,7 +40,6 @@ const NewCommunity: NextPage = () => {
 
   const onValid = async (data: PostForm) => {
     if (loading) return;
-    console.log(data);
     if (data.image && data.image?.length > 0) {
       const { uploadURL } = await (await fetch("/api/file")).json();
       const form = new FormData();

@@ -96,7 +96,7 @@ const PostLi: React.FC<PostLiProps> = ({ postId }) => {
         </div>
         <div className="flex items-center space-x-1">
           <div
-            onClick={() => onPostDetail(data?.post.id)}
+            onClick={() => onPostDetail(data?.post?.id)}
             className="mr-3 cursor-pointer hover:text-pink-500 transition-all text-gray-400"
           >
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

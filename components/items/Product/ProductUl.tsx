@@ -7,7 +7,7 @@ import ProductLi from "./ProductLi";
 interface ItemUlProps {
   title?: string;
   products?: WithPhotoWithCountWithUser[];
-  loading: boolean;
+  loading?: boolean;
   mutate?: KeyedMutator<ProductListResponse>;
 }
 

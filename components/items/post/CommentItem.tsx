@@ -26,9 +26,9 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, postId }) => {
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-gray-400 flex justify-center items-center relative mr-1">
-            {comment?.user.avatar ? (
+            {comment?.user?.avatar ? (
               <Image
-                src={deliveryFile(comment?.user.avatar)}
+                src={deliveryFile(comment?.user?.avatar)}
                 layout="fill"
                 objectFit="cover"
                 alt=""
@@ -46,7 +46,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, postId }) => {
               </svg>
             )}
           </div>
-          <span className="text-sm">{comment.user.username}</span>
+          <span className="text-sm">{comment.user?.username}</span>
         </div>
 
         {confirmUser && (

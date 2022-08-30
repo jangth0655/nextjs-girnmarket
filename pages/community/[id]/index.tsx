@@ -1,16 +1,16 @@
 import CommentsItems from "@components/items/post/CommentsItems";
-
 import CreateComment from "@components/items/post/CreateComment";
 import Layout from "@components/Layout";
 import { cls } from "@libs/client/cls";
 import { deliveryFile } from "@libs/client/deliveryImage";
 import useMutation from "@libs/client/mutation";
-import { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { PostWithUserWithCount } from "..";
+import client from "@libs/server/client";
 
 interface PostDetailResponse {
   ok: boolean;
@@ -19,7 +19,7 @@ interface PostDetailResponse {
   post: PostWithUserWithCount;
 }
 
-const PostDetail: NextPage = () => {
+const PostDetail: NextPage<{ post: PostWithUserWithCount }> = ({ post }) => {
   const router = useRouter();
   const { data, error, mutate } = useSWR<PostDetailResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null,
@@ -135,13 +135,67 @@ const PostDetail: NextPage = () => {
               <h1 className="font-bold text-lg">Comments</h1>
             </div>
             <div>
-              <CommentsItems id={Number(data?.post?.id)} />
+              <CommentsItems id={Number(post?.id)} />
             </div>
-            <div>{<CreateComment id={Number(data?.post?.id)} />}</div>
+            <div>{<CreateComment id={Number(post?.id)} />}</div>
           </div>
         </main>
       )}
     </Layout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  if (!ctx.params?.id) {
+    return {
+      props: {},
+    };
+  }
+  const post = await client.post.findUnique({
+    where: {
+      id: Number(ctx.params.id),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+        },
+      },
+      comments: {
+        select: {
+          answer: true,
+          createdAt: true,
+          id: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+          likePost: true,
+        },
+      },
+    },
+  });
+  return {
+    props: {
+      post: JSON.parse(JSON.stringify(post)),
+    },
+  };
 };
 export default PostDetail;

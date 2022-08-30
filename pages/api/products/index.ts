@@ -54,7 +54,7 @@ const handler = async (
         body: { name, price, description, productId },
         session: { user },
       } = req;
-
+      console.log("uploadAPI", req.body);
       if (!productId) {
         return res.json({ ok: false, error: "Image is required." });
       }
@@ -91,6 +91,8 @@ const handler = async (
           },
         });
       }
+
+      await res.revalidate("/");
 
       return res.status(201).json({ ok: true });
     }

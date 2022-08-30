@@ -31,7 +31,7 @@ interface ProductDetailResponse {
   isPurchaseProduct: boolean;
 }
 
-const ProductDetail: NextPage = () => {
+const ProductDetail: NextPage<ProductDetailResponse> = () => {
   const router = useRouter();
   const { user } = useUser({ isPrivate: true });
   const [hover, setHover] = useState(false);
@@ -60,41 +60,44 @@ const ProductDetail: NextPage = () => {
   }, []);
 
   const onFav = () => {
-    fav({});
+    if (favLoading) return;
     mutate((data) => data && { ...data, isLiked: !data.isLiked }, false);
+    fav({});
   };
 
   const onFavList = () => {
-    favList({});
+    if (favListLoading) return;
     mutate(
       (data) => data && { ...data, isLikedProduct: !data.isLikedProduct },
       false
     );
+    favList({});
   };
 
   const onBuy = () => {
+    if (purchaseLoading) return;
     window.confirm("Do you really want to buy something");
-    buy({});
     mutate(
       (data) => data && { ...data, isPurchaseProduct: !data.isPurchaseProduct },
       false
     );
+    buy({});
   };
 
   return (
-    <Layout title={data?.product?.name} head="Product">
+    <Layout title={data?.product.name} head="data?.Product">
       {loading
         ? "Loading..."
-        : router.query.id && (
+        : data?.product.id && (
             <div className="max-w-3xl m-auto">
               <div className="space-y-4 w-[100%] m-auto">
                 <h1 className="font-bold text-2xl">{data?.product?.name}</h1>
                 <div className="flex justify-between items-end">
                   <div>
                     <div className="w-10 h-10 rounded-full bg-gray-400 flex justify-center items-center relative">
-                      {data?.product?.user?.avatar ? (
+                      {data?.product.user?.avatar ? (
                         <Image
-                          src={deliveryFile(data?.product?.user?.avatar)}
+                          src={deliveryFile(data?.product.user?.avatar)}
                           layout="fill"
                           objectFit="cover"
                           alt=""
@@ -144,7 +147,7 @@ const ProductDetail: NextPage = () => {
                       <svg
                         className={cls(
                           "h-6 w-6 mr-1",
-                          data?.isLiked ? "text-red-500" : ""
+                          data.isLiked ? "text-red-500" : ""
                         )}
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -154,13 +157,6 @@ const ProductDetail: NextPage = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <div>
-                        <span className="text-sm">
-                          {data?.product?._count?.favs
-                            ? data?.product?._count?.favs
-                            : 0}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -202,7 +198,7 @@ const ProductDetail: NextPage = () => {
                       onClick={() => onBuy()}
                       className={cls(
                         "transition-all cursor-pointer rounded-full p-1 bg-red-300 hover:bg-red-500",
-                        data?.isPurchaseProduct ? "bg-red-500" : ""
+                        data.isPurchaseProduct ? "bg-red-500" : ""
                       )}
                     >
                       <svg
@@ -219,7 +215,7 @@ const ProductDetail: NextPage = () => {
                       <span
                         className={cls(
                           "font-bold",
-                          data.isPurchaseProduct ? "text-red-500" : ""
+                          data?.isPurchaseProduct ? "text-red-500" : ""
                         )}
                       >
                         Purchase complete
@@ -239,10 +235,10 @@ const ProductDetail: NextPage = () => {
                   <h1 className="font-bold text-lg">Reviews</h1>
                 </div>
                 <div>
-                  <Reviews id={Number(router.query.id)} />
+                  <Reviews id={Number(data?.product.id)} />
                 </div>
                 <div>
-                  <CreateReview id={Number(router.query.id)} />
+                  <CreateReview id={Number(data?.product.id)} />
                 </div>
               </div>
             </div>
@@ -250,4 +246,5 @@ const ProductDetail: NextPage = () => {
     </Layout>
   );
 };
+
 export default ProductDetail;

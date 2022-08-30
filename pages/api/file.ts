@@ -1,7 +1,5 @@
-import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withSessionAPI } from "@libs/server/withSession";
-import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (
@@ -10,20 +8,21 @@ const handler = async (
 ) => {
   try {
     const response = await (
-      await axios({
-        method: "POST",
-        url: `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_ACCOUNT_ID}/images/v2/direct_upload`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.CLOUD_API_TOKEN}`,
-        },
-      })
-    ).data;
+      await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_ACCOUNT_ID}/images/v1/direct_upload`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.CLOUD_API_TOKEN}`,
+          },
+        }
+      )
+    ).json();
 
     return res.json({ ok: true, ...response.result });
   } catch (e) {
-    console.log(`${e} Error in handler`);
-    return res.status(500).json({ ok: false, error: "Error in handler" });
+    return res.status(500).json({ ok: false, error: `Error : ${e}` });
   }
 };
 
