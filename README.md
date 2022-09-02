@@ -75,8 +75,8 @@
   → 데이터를 암호화된 쿠키에 저장됩니다.  
   → 쿠키(암호화)에 저장된 세션데이터는 서버측에서만 복호화할 수 있습니다.
 
-  <br /><br />
   <img height="500" src="./public/preview/login/login-preview.gif" />
+  <br /><br />
 
 > 2.  Product (Home)
 
@@ -100,8 +100,8 @@ const onFav = () => {
 };
 ```
 
-<br /><br />
 <img height="500" src="./public/preview/product/product-preview-like.gif" />
+<br /><br />
 
 > 3. 검색
 
@@ -116,9 +116,7 @@ const onFav = () => {
 - 이미지는 미리보기를 통해 업로드할 수 있습니다.  
   → `React-hook-form`의 `watch`api를 이용하여 미리보기 후 사진도 업로드 할 수 있습니다.
 
-<br /><br />
 <img height="500" src="./public/preview/upload/product-preview-upload.gif" />
-
 <br /><br />
 
 > 5. About Product (상세정보)
@@ -128,8 +126,8 @@ const onFav = () => {
   → `swr`의 `mutate`api를 통해 캐시를 조작하여 즉각적인 반응을 볼 수 있습니다.
 - 로그인 여부를 체크하여 "리뷰"를 작성할 수 있습니다.
 
-  <br /><br />
   <img height="500" src="./public/preview/product/productDetail-preview.gif" />
+  <br /><br />
 
 > 6. Edit Product (상품 수정)
 
@@ -137,8 +135,8 @@ const onFav = () => {
 - 제목(이름), 가격, 설명, 이미지를 변경할 수 있습니다.
 - 상품을 삭제할 수 있습니다.
 
-  <br /><br />
   <img height="500" src="./public/preview/product/productEdit-preview.gif" />
+  <br /><br />
 
   > 7. Communication (게시글)
 
@@ -147,9 +145,7 @@ const onFav = () => {
 - 게시글을 클릭하여 상세정보를 볼 수 있으며 "댓글"을 올릴 수 있습니다.
 - 해당 유저가 올린 해당 유저의 댓글을 삭제할 수 있습니다.
 
-<br /><br />
 <img height="500" src="./public/preview/community/communityDetail-preview.gif" />
-
 <br /><br />
 
 > 8. Edit post (게시글 수정)
@@ -158,8 +154,8 @@ const onFav = () => {
 - 게시글과, 이미지를 업데이트할 수 있습니다.
 - 게시글을 삭제할 수 있습니다.
 
-  <br /><br />
   <img height="500" src="./public/preview/community/communityEdit-preview.gif" />
+  <br /><br />
 
 > 9. 프로필
 
@@ -177,10 +173,8 @@ const onFav = () => {
 - 유저네임, 이메일은 유니크하기때문에 중복을 체크하여 업로드 할 수 있습니다.
 - 계정을 삭제할 수 있습니다.
 
-  <br /><br />
   <img height="500" src="./public/preview/profile/profile-preview-edit.gif" />
-
->
+  <br /><br />
 
 ## Pages
 

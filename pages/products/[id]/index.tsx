@@ -84,6 +84,8 @@ const ProductDetail: NextPage<ProductDetailResponse> = () => {
     buy({});
   };
 
+  const numberFormat = new Intl.NumberFormat("ko");
+
   return (
     <Layout title={data?.product.name} head="data?.Product">
       {loading
@@ -175,7 +177,9 @@ const ProductDetail: NextPage<ProductDetailResponse> = () => {
                         <div className="flex flex-col text-white font-bold space-y-8">
                           <div className="w-full ">
                             <span className="mr-10">Price :</span>
-                            <span>{data?.product?.price} ₩</span>
+                            <span>
+                              {numberFormat.format(+data?.product?.price)} 원
+                            </span>
                           </div>
                           <div className="overflow-y-scroll">
                             <p>{data?.product?.description.slice(0, 100)}...</p>
