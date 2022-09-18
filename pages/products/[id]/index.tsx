@@ -87,10 +87,10 @@ const ProductDetail: NextPage<ProductDetailResponse> = () => {
   const numberFormat = new Intl.NumberFormat("ko");
 
   return (
-    <Layout title={data?.product.name} head="data?.Product">
+    <Layout title={data?.product.name} head="Product">
       {loading
         ? "Loading..."
-        : data?.product.id && (
+        : data?.product?.id && (
             <div className="max-w-3xl m-auto">
               <div className="space-y-4 w-[100%] m-auto">
                 <h1 className="font-bold text-2xl">{data?.product?.name}</h1>

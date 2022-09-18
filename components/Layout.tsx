@@ -334,7 +334,7 @@ const Layout: React.FC<LayoutProps> = ({
             setActiveNav(false);
             setProfileNav(false);
           }}
-          className="min-h-screen"
+          className="mb-4 min-h-screen"
         >
           <div className="mt-24 mb-8 w-7 h-7 border-2 rounded-md flex justify-center items-center border-slate-300 cursor-pointer">
             <svg
